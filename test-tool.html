@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Tool · MOCM</title>
+<style>
+:root{ --blue-dark:#0b3d68; --blue:#1565a8; --gold:#d4a017; --green:#28a745;
+  --red:#dc3545; --bg:#eef2f6; --soft:#e8f1f9; --border:#d5dee7; --text:#1b2733; --muted:#6b7987; }
+*{ box-sizing:border-box; }
+html,body{ margin:0; max-width:100%; overflow-x:hidden; }
+body{ font-family:'Agency FB','Arial Narrow',Arial,sans-serif; background:var(--bg);
+  color:var(--text); font-size:14px; line-height:1.5; }
+input,select,textarea{ font-size:16px; }
+.hdr{ background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:#fff; padding:14px 16px; text-align:center; }
+.hdr .org{ font-size:9.5px; letter-spacing:.5px; opacity:.9; }
+.hdr .ttl{ font-size:16px; font-weight:800; color:var(--gold); text-transform:uppercase; margin-top:2px; }
+.hdr .sub{ font-size:11.5px; opacity:.85; margin-top:3px; }
+.wrap{ max-width:720px; margin:0 auto; padding:16px 14px 40px; }
+.card{ background:#fff; border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:14px; }
+.card h3{ margin:0 0 10px; font-size:13px; text-transform:uppercase; letter-spacing:.5px; color:var(--blue-dark); }
+.row{ margin-bottom:12px; }
+label{ display:block; font-weight:600; font-size:13.5px; margin-bottom:5px; }
+input[type=text],input[type=date],select,textarea{ width:100%; padding:12px 13px;
+  border:1.5px solid var(--border); border-radius:12px; font-family:inherit; }
+.opts{ display:flex; gap:8px; flex-wrap:wrap; }
+.opt{ flex:1 1 100px; text-align:center; padding:11px 8px; border:1.5px solid var(--border);
+  border-radius:12px; background:#fff; cursor:pointer; font-weight:700; font-size:13px; }
+.opt.on{ background:#e7f6ea; border-color:#b7dfc1; color:#14682a; }
+.opt.no{ background:#fdecea; border-color:#f5c2bd; color:var(--red); }
+.btn{ width:100%; padding:15px; border:none; border-radius:40px; font-weight:800; font-size:15px;
+  font-family:inherit; cursor:pointer; background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:#fff; }
+.out{ display:none; margin-top:14px; padding:13px 15px; border-radius:12px; font-size:13px;
+  background:#d4edda; border:1px solid #b7dfc1; color:#155724; }
+.out.on{ display:block; }
+.chk{ font-size:12.5px; color:var(--muted); background:#fff; border:1px dashed var(--border);
+  border-radius:12px; padding:12px 14px; margin-bottom:14px; }
+.chk b{ color:var(--blue-dark); }
+.chk .line{ padding:3px 0; }
+.ok{ color:var(--green); font-weight:700; }
+.bad{ color:var(--red); font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="org">National Malaria Control Programme — MoH, Sierra Leone</div>
+  <div class="ttl">Test Tool</div>
+  <div class="sub">A dummy form, for checking the App Builder works</div>
+</div>
+
+<div class="wrap">
+
+  <div class="chk" id="env">Checking how this page was opened...</div>
+
+  <div class="card">
+    <h3>A few questions</h3>
+
+    <div class="row">
+      <label for="who">Your name</label>
+      <input type="text" id="who" placeholder="Type anything">
+    </div>
+
+    <div class="row">
+      <label for="when">Date</label>
+      <input type="date" id="when">
+    </div>
+
+    <div class="row">
+      <label>Does this page look right on your phone?</label>
+      <div class="opts">
+        <div class="opt" onclick="pick(this,'yes')">Yes</div>
+        <div class="opt" onclick="pick(this,'no')">No</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="note">Anything to note</label>
+      <textarea id="note" rows="3" placeholder="Optional"></textarea>
+    </div>
+
+    <button class="btn" onclick="submit()">TEST SUBMIT</button>
+    <div class="out" id="out"></div>
+  </div>
+
+  <div class="card">
+    <h3>Why this file exists</h3>
+    <p style="margin:0;font-size:13px;color:var(--muted);">
+      Drop it into the App Builder to check that a tool lists, opens full screen, scrolls,
+      accepts typing without the page zooming, and closes again. Nothing here is sent anywhere:
+      the submit button only shows what you typed.
+    </p>
+  </div>
+</div>
+
+<script>
+/* This dummy tool reports how it was opened, which is the useful part: it tells
+   you whether the App Builder framed it, and whether this browser would keep a
+   real form's drafts if it were opened the same way. */
+var picked = '';
+
+function pick(el, val){
+  var group = el.parentElement;
+  group.querySelectorAll('.opt').forEach(function (o){ o.className = 'opt'; });
+  el.className = 'opt ' + (val === 'yes' ? 'on' : 'no');
+  picked = val;
+}
+
+function submit(){
+  var out = document.getElementById('out');
+  out.className = 'out on';
+  out.innerHTML = '<b>Nothing was sent, this is a test.</b><br>' +
+    'Name: ' + (document.getElementById('who').value || 'blank') + '<br>' +
+    'Date: ' + (document.getElementById('when').value || 'blank') + '<br>' +
+    'Looks right: ' + (picked || 'not answered') + '<br>' +
+    'Note: ' + (document.getElementById('note').value || 'blank');
+}
+
+(function report(){
+  var framed = false;
+  try { framed = window.self !== window.top; } catch (e) { framed = true; }
+
+  var storage = 'no';
+  try { localStorage.setItem('__t','1'); localStorage.removeItem('__t'); storage = 'yes'; } catch (e) {}
+
+  var el = document.getElementById('env');
+  el.innerHTML =
+    '<div class="line"><b>Opened inside a frame:</b> <span class="' + (framed ? 'ok' : 'bad') + '">' +
+      (framed ? 'yes, the App Builder or the portal is holding it' : 'no, this is a page on its own') + '</span></div>' +
+    '<div class="line"><b>Address:</b> ' + location.protocol + (location.protocol === 'blob:' ? ' (a blob, so it came from the App Builder)' : '') + '</div>' +
+    '<div class="line"><b>This browser will keep data:</b> <span class="' + (storage === 'yes' ? 'ok' : 'bad') + '">' + storage + '</span>' +
+      (location.protocol === 'blob:' ? ' — but only until the App Builder page is closed, because a blob address changes every time' : '') + '</div>' +
+    '<div class="line"><b>Screen:</b> ' + window.innerWidth + ' by ' + window.innerHeight + ' points</div>' +
+    '<div class="line" style="margin-top:6px;">If the page zooms when you tap a box above, that field is under 16px. ' +
+      'These are 16px, so it should not.</div>';
+})();
+
+var d = document.getElementById('when');
+if (d && !d.value) d.value = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
