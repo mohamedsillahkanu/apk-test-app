@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App &amp; Tools · NMDR · NMCP Sierra Leone</title>
+<style>
+:root{
+  --blue-dark:#0b3d68; --blue:#1565a8; --blue-light:#3f8fd0; --gold:#d4a017;
+  --green:#28a745; --amber:#e6a700; --red:#dc3545;
+  --bg:#eef2f6; --soft:#e8f1f9; --border:#d5dee7; --text:#1b2733; --muted:#6b7987;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; height:100%; max-width:100%; overflow-x:hidden; }
+body{ font-family:'Agency FB','Arial Narrow',Arial,sans-serif; background:var(--bg);
+  color:var(--text); font-size:14px; line-height:1.5; display:flex; flex-direction:column; min-height:100dvh; }
+input,select,textarea{ font-size:16px; }
+
+.app-header{ flex:none; background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 60%,var(--blue-light) 100%);
+  color:#fff; padding:14px 16px 12px; text-align:center; }
+.app-header .org{ font-size:9.5px; font-weight:600; letter-spacing:.5px; opacity:.9; }
+.app-header .title{ font-size:16px; font-weight:800; text-transform:uppercase; color:var(--gold); letter-spacing:.5px; margin-top:2px; }
+.app-header .sub{ font-size:11.5px; opacity:.85; margin-top:3px; }
+
+.wrap{ flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:16px 14px 40px; max-width:840px; margin:0 auto; width:100%; }
+
+.head{ display:flex; align-items:center; gap:10px; margin:4px 0 10px; }
+.head h2{ font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
+  color:var(--blue-dark); margin:0; white-space:nowrap; }
+.head .rule{ flex:1 1 auto; height:2px; background:var(--border); }
+.head .count{ font-size:11px; font-weight:700; color:var(--muted); white-space:nowrap; }
+
+.src{ background:#fff; border:1px dashed var(--border); border-radius:12px;
+  padding:11px 13px; font-size:12px; color:var(--muted); margin-bottom:14px; }
+.src b{ color:var(--blue-dark); }
+.src .link{ word-break:break-all; color:var(--blue); }
+.src .acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:9px; }
+
+.item{ background:#fff; border:1px solid var(--border); border-left:5px solid var(--blue);
+  border-radius:14px; padding:12px 14px; margin-bottom:10px; }
+.item.apk{ border-left-color:var(--green); }
+.item .row1{ display:flex; align-items:baseline; gap:8px; }
+.item .name{ font-weight:800; color:var(--blue-dark); font-size:14.5px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1 1 auto; min-width:0; }
+.item .size{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
+.item .meta{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+.acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.btn{ padding:9px 14px; border-radius:40px; border:1.5px solid var(--blue); background:#fff;
+  color:var(--blue-dark); font-weight:800; font-size:12px; font-family:inherit; cursor:pointer; }
+.btn.go{ background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:#fff; border-color:transparent; }
+.btn.get{ background:linear-gradient(135deg,#1d7a35,var(--green)); color:#fff; border-color:transparent; }
+.btn.small{ padding:7px 12px; font-size:11.5px; }
+
+.empty{ text-align:center; color:var(--muted); font-size:12.5px; padding:14px 10px 20px; }
+.warn{ background:#fff8e1; border:1.5px solid var(--gold); border-radius:12px;
+  padding:11px 13px; font-size:12.5px; margin-top:10px; }
+.warn b{ color:#7a5600; }
+.bad{ background:#fdecea; border:1.5px solid #f5c2bd; border-radius:12px;
+  padding:12px 14px; font-size:12.5px; color:#7a1c22; margin-bottom:14px; }
+.bad b{ display:block; margin-bottom:4px; }
+
+.viewer{ position:fixed; inset:0; background:var(--bg); display:none; flex-direction:column; z-index:900; }
+.viewer.show{ display:flex; }
+.vbar{ flex:none; display:flex; align-items:center; gap:10px; background:var(--blue-dark); color:#fff; padding:10px 12px; }
+.vbar .nm{ flex:1 1 auto; font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.vbar button{ background:rgba(255,255,255,.15); color:#fff; border:none; border-radius:20px;
+  padding:8px 14px; font-weight:800; font-size:12px; font-family:inherit; cursor:pointer; }
+.viewer iframe{ flex:1 1 auto; width:100%; border:none; background:#fff; }
+
+.foot{ text-align:center; font-size:11px; color:var(--muted); padding:14px 0 0; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="org">National Malaria Control Programme — MoH, Sierra Leone</div>
+  <div class="title">App &amp; Tools</div>
+  <div class="sub">The Android app and the HTML tools, read from GitHub</div>
+</div>
+
+<div class="wrap">
+
+  <div id="errBox"></div>
+
+  <div class="src" id="srcBox">Reading the repository...</div>
+
+</div>
+
+  <div class="head"><h2>Android app</h2><div class="rule"></div><div class="count" id="apkCount">—</div></div>
+  <div id="apkList"><div class="empty">Reading...</div></div>
+
+  <div class="head" style="margin-top:24px;"><h2>HTML tools</h2><div class="rule"></div><div class="count" id="htmlCount">—</div></div>
+  <div id="htmlList"><div class="empty">Reading...</div></div>
+
+  <div class="foot">Informatics Consultancy Firm, Sierra Leone · <span id="buildTag"></span></div>
+</div>
+
+<div class="viewer" id="viewer">
+  <div class="vbar">
+    <div class="nm" id="vName"></div>
+    <button onclick="closeViewer()">CLOSE</button>
+  </div>
+  <iframe id="vFrame" src="about:blank" allow="geolocation *; fullscreen"></iframe>
+</div>
+
+<script>
+/* ==========================================================================
+   APP & TOOLS  ·  reads a GitHub folder, nothing is uploaded from here
+   NMCP Sierra Leone · ICF-SL
+
+   HOW IT WORKS
+     It asks GitHub what is in one folder of one repository, then lists the .apk
+     for downloading and the .html files for opening. Change the repository in
+     the settings panel; the choice is remembered on this device.
+
+   TWO THINGS THAT MATTER AND ARE EASY TO GET WRONG
+     1. An HTML file is opened from the PAGES address, not from raw.githubusercontent,
+        because raw serves .html as plain text and the browser would show the
+        source code instead of the form. If Pages is not switched on for the
+        repository, the page says so rather than showing gibberish.
+     2. GitHub allows about 60 unauthenticated requests an hour from one address.
+        The listing is therefore cached on the device, so a supervisor opening the
+        page repeatedly still sees the tools, and the page keeps working offline
+        with the last list it saw.
+   ========================================================================== */
+
+var BUILD = 'apptools-2026-08-01a';
+document.getElementById('buildTag').textContent = 'build ' + BUILD;
+
+/* ---------------------------------------------------------------------------
+   SET THE REPOSITORY HERE, ONCE. Nothing is configured on the phone.
+   --------------------------------------------------------------------------- */
+var REPO = {
+  owner:  '',                 // e.g. 'icf-sl'
+  repo:   '',                 // e.g. 'nmdr-portal'
+  branch: 'main',
+  path:   '',                 // folder inside the repo, blank for the top level
+  pages:  ''                  // e.g. 'https://icf-sl.github.io/nmdr-portal/'
+};
+
+var CACHE_KEY = 'nmdr_apptools_cache';
+var CFG = (function (){
+  var c = {};
+  Object.keys(REPO).forEach(function (k){ c[k] = REPO[k]; });
+  if (!c.branch) c.branch = 'main';
+  c.path = String(c.path || '').replace(/^\/+|\/+$/g, '');
+  /* the Pages address is where the files are SERVED from; guess the usual one */
+  if (!c.pages && c.owner && c.repo) {
+    c.pages = 'https://' + c.owner.toLowerCase() + '.github.io/' + c.repo + '/';
+  }
+  if (c.pages && c.pages.slice(-1) !== '/') c.pages += '/';
+  return c;
+})();
+
+function esc(v){
+  return String(v === undefined || v === null ? '' : v)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function size(n){
+  if (!n && n !== 0) return '';
+  if (n < 1024) return n + ' B';
+  if (n < 1024*1024) return Math.round(n/1024) + ' KB';
+  return (Math.round(n/1024/1024*10)/10) + ' MB';
+}
+
+function apiUrl(){
+  return 'https://api.github.com/repos/' + encodeURIComponent(CFG.owner) + '/' +
+         encodeURIComponent(CFG.repo) + '/contents/' + (CFG.path ? CFG.path + '/' : '') +
+         '?ref=' + encodeURIComponent(CFG.branch);
+}
+
+/* where a file is SERVED from, which is not where it is listed from */
+function openUrl(name){
+  return CFG.pages + (CFG.path ? CFG.path + '/' : '') + name;
+}
+
+/* ---------- reading the folder ---------- */
+function load(loud){
+  if (!CFG.owner || !CFG.repo) {
+    /* the file was published without its repository filled in */
+    document.getElementById('errBox').innerHTML = '<div class="bad"><b>This copy has no repository set.</b>' +
+      'Open app_tools.html and fill in owner, repo and path in the REPO block at the top of the file.</div>';
+    document.getElementById('srcBox').style.display = 'none';
+    document.getElementById('apkList').innerHTML = '<div class="empty">Nothing to read yet.</div>';
+    document.getElementById('htmlList').innerHTML = '<div class="empty">Nothing to read yet.</div>';
+    return;
+  }
+
+  document.getElementById('srcBox').innerHTML = 'Reading <b>' + esc(CFG.owner + '/' + CFG.repo) + '</b>...';
+  document.getElementById('errBox').innerHTML = '';
+
+  fetch(apiUrl(), { headers: { 'Accept': 'application/vnd.github+json' } })
+    .then(function (res){
+      if (res.status === 403) throw new Error('rate');
+      if (res.status === 404) throw new Error('missing');
+      if (!res.ok) throw new Error('GitHub answered ' + res.status);
+      return res.json();
+    })
+    .then(function (list){
+      if (!Array.isArray(list)) throw new Error('That path is a file, not a folder.');
+      var files = list.filter(function (f){ return f.type === 'file'; })
+        .map(function (f){ return { name: f.name, size: f.size, download: f.download_url }; });
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: new Date().toLocaleString(), files: files })); } catch (e) {}
+      draw(files, 'read just now');
+    })
+    .catch(function (err){ fallback(err); });
+}
+
+/* if GitHub cannot be reached, show the last list rather than an empty page */
+function fallback(err){
+  var cached = null;
+  try { cached = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
+
+  var why = String(err && err.message || err);
+  var msg;
+  if (why === 'rate') {
+    msg = '<b>GitHub is asking you to wait.</b> It allows about 60 reads an hour from one connection, ' +
+          'and that has been used up. The list below is the last one this device saw. It will work again within the hour.';
+  } else if (why === 'missing') {
+    msg = '<b>That repository or folder was not found.</b> Check the user, the repository, the branch and the folder. ' +
+          'A private repository cannot be read this way at all.';
+  } else if (!navigator.onLine) {
+    msg = '<b>This phone is offline.</b> Showing the list it last saw. Downloading and opening need a connection.';
+  } else {
+    msg = '<b>GitHub could not be reached.</b> ' + esc(why);
+  }
+  document.getElementById('errBox').innerHTML = '<div class="bad">' + msg + '</div>';
+
+  if (cached && cached.files) draw(cached.files, 'last read ' + cached.at);
+  else {
+    document.getElementById('srcBox').innerHTML =
+      '<b>' + esc(CFG.owner + '/' + CFG.repo) + '</b>';
+    document.getElementById('apkList').innerHTML = '<div class="empty">Nothing read yet.</div>';
+    document.getElementById('htmlList').innerHTML = '<div class="empty">Nothing read yet.</div>';
+  }
+}
+
+/* ---------- drawing ---------- */
+function draw(files, when){
+  var apks = files.filter(function (f){ return /\.apk$/i.test(f.name); });
+  var htmls = files.filter(function (f){ return /\.html?$/i.test(f.name); })
+                   .sort(function (a, b){ return a.name < b.name ? -1 : 1; });
+
+  document.getElementById('srcBox').innerHTML =
+    '<b>' + esc(CFG.owner + '/' + CFG.repo) + '</b> · branch ' + esc(CFG.branch) +
+    (CFG.path ? ' · folder ' + esc(CFG.path) : '') +
+    '<div style="margin-top:3px;">' + esc(when) + ' · ' + files.length + ' files in the folder</div>' +
+    '<div class="acts">' +
+      '<button class="btn small go" onclick="load(true)">READ AGAIN</button>' +
+    '</div>';
+
+  document.getElementById('apkCount').textContent = apks.length ? apks.length + ' app' + (apks.length === 1 ? '' : 's') : 'none';
+  document.getElementById('htmlCount').textContent = htmls.length ? htmls.length + ' file' + (htmls.length === 1 ? '' : 's') : 'none';
+
+  document.getElementById('apkList').innerHTML = apks.length ? apks.map(function (f){
+    return '<div class="item apk"><div class="row1">' +
+      '<div class="name">' + esc(f.name) + '</div><div class="size">' + size(f.size) + '</div></div>' +
+      '<div class="acts">' +
+        '<a class="btn get" href="' + esc(f.download) + '" download="' + esc(f.name) + '">DOWNLOAD TO INSTALL</a>' +
+      '</div>' +
+      '<div class="warn"><b>Installing needs one Android setting.</b> After downloading, Android asks permission ' +
+      'to install from this browser. Allow it once, then open the downloaded file. iPhones cannot install an APK.</div>' +
+    '</div>';
+  }).join('') : '<div class="empty">No .apk in that folder yet.</div>';
+
+  var canOpen = !!CFG.pages;
+  document.getElementById('htmlList').innerHTML = htmls.length ? htmls.map(function (f){
+    return '<div class="item"><div class="row1">' +
+      '<div class="name">' + esc(f.name) + '</div><div class="size">' + size(f.size) + '</div></div>' +
+      '<div class="acts">' +
+        (canOpen ? '<button class="btn go" onclick="open_(\'' + esc(f.name) + '\')">OPEN</button>' : '') +
+        '<a class="btn" href="' + esc(f.download) + '" download="' + esc(f.name) + '">DOWNLOAD</a>' +
+      '</div>' +
+      (canOpen ? '' : '<div class="warn"><b>Cannot open it here yet.</b> Give the address the files are served from, ' +
+        'usually a GitHub Pages address, in the REPO block at the top of this file. Without it a browser shows ' +
+        'code instead of the form.</div>') +
+    '</div>';
+  }).join('') : '<div class="empty">No .html in that folder yet.</div>';
+}
+
+/* ---------- opening ---------- */
+function open_(name){
+  document.getElementById('vName').textContent = name;
+  document.getElementById('vFrame').src = openUrl(name);
+  document.getElementById('viewer').classList.add('show');
+}
+function closeViewer(){
+  document.getElementById('viewer').classList.remove('show');
+}
+window.addEventListener('keydown', function (e){
+  if (e.key === 'Escape' && document.getElementById('viewer').classList.contains('show')) closeViewer();
+});
+
+load(false);
+</script>
+</body>
+</html>
