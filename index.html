@@ -143,9 +143,30 @@ var CACHE_KEY = 'nmdr_apptools_cache';
 var CFG = (function (){
   var c = {};
   Object.keys(REPO).forEach(function (k){ c[k] = REPO[k]; });
+
+  /* If the block above was left blank, work the repository out from the address
+     this page is being served at. On GitHub Pages
+        https://<owner>.github.io/<repo>/...
+     gives the owner and the repository, so a copy dropped into a repo and
+     published just works with nothing filled in. A user site, <owner>.github.io
+     with no repo folder, uses the repository <owner>.github.io. */
+  if ((!c.owner || !c.repo) && /\.github\.io$/i.test(location.hostname)) {
+    c.owner = c.owner || location.hostname.replace(/\.github\.io$/i, '');
+    if (!c.repo) {
+      var first = location.pathname.split('/').filter(Boolean)[0];
+      c.repo = (first && !/\.html?$/i.test(first)) ? first : location.hostname;
+    }
+    c.derived = true;
+  }
+
   if (!c.branch) c.branch = 'main';
   c.path = String(c.path || '').replace(/^\/+|\/+$/g, '');
-  /* the Pages address is where the files are SERVED from; guess the usual one */
+  /* Where the files are SERVED from. When the page worked itself out, that is
+     simply the folder this page is in, which is right for a project site and for
+     a user site alike. */
+  if (!c.pages && c.derived) {
+    c.pages = location.origin + location.pathname.replace(/[^/]*$/, '');
+  }
   if (!c.pages && c.owner && c.repo) {
     c.pages = 'https://' + c.owner.toLowerCase() + '.github.io/' + c.repo + '/';
   }
@@ -176,11 +197,15 @@ function openUrl(name){
 }
 
 /* ---------- reading the folder ---------- */
+var triedOther = false;
+
 function load(loud){
   if (!CFG.owner || !CFG.repo) {
     /* the file was published without its repository filled in */
     document.getElementById('errBox').innerHTML = '<div class="bad"><b>This copy has no repository set.</b>' +
-      'Open app_tools.html and fill in owner, repo and path in the REPO block at the top of the file.</div>';
+      'It normally works this out from its own address, which only happens on a github.io address. ' +
+      'This page is at ' + esc(location.origin) + ', so fill in owner and repo in the REPO block ' +
+      'at the top of the file.</div>';
     document.getElementById('srcBox').style.display = 'none';
     document.getElementById('apkList').innerHTML = '<div class="empty">Nothing to read yet.</div>';
     document.getElementById('htmlList').innerHTML = '<div class="empty">Nothing to read yet.</div>';
@@ -204,7 +229,17 @@ function load(loud){
       try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: new Date().toLocaleString(), files: files })); } catch (e) {}
       draw(files, 'read just now');
     })
-    .catch(function (err){ fallback(err); });
+    .catch(function (err){
+      /* a repository made some years ago is on master rather than main, so try
+         the other name once before reporting that nothing was found */
+      if (String(err.message) === 'missing' && !triedOther) {
+        triedOther = true;
+        CFG.branch = (CFG.branch === 'main') ? 'master' : 'main';
+        load(loud);
+        return;
+      }
+      fallback(err);
+    });
 }
 
 /* if GitHub cannot be reached, show the last list rather than an empty page */
@@ -245,7 +280,8 @@ function draw(files, when){
   document.getElementById('srcBox').innerHTML =
     '<b>' + esc(CFG.owner + '/' + CFG.repo) + '</b> · branch ' + esc(CFG.branch) +
     (CFG.path ? ' · folder ' + esc(CFG.path) : '') +
-    '<div style="margin-top:3px;">' + esc(when) + ' · ' + files.length + ' files in the folder</div>' +
+    '<div style="margin-top:3px;">' + esc(when) + ' · ' + files.length + ' files in the folder' +
+      (CFG.derived ? ' · worked out from this page\'s own address' : '') + '</div>' +
     '<div class="acts">' +
       '<button class="btn small go" onclick="load(true)">READ AGAIN</button>' +
     '</div>';
