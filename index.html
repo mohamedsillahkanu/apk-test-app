@@ -3,410 +3,651 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sillah Kanu Series — Factorising Practice</title>
+<title>Cut &amp; Sew — Ankara Short-Sleeve Top</title>
 <style>
   :root{
-    --paper:#FFFDF6;
-    --board:#F3EAD6;
-    --ink:#1A1A1A;
-    --rule:#D8CBAE;
-    --tray:#3E2A18;
-    --tray2:#573A21;
-    --good:#1FA13A;
-    --bad:#E8112D;
-    --font-hand:"Comic Sans MS","Chalkboard SE","Segoe Print","Trebuchet MS",sans-serif;
-    --font-math:"Cambria Math","Georgia","Times New Roman",serif;
+    --kraft:#C9A87C;         /* brown pattern paper */
+    --kraft-dark:#A8875C;
+    --indigo:#1B2A4A;        /* adire indigo */
+    --indigo-soft:#2C4370;
+    --chalk:#F7F3EA;
+    --ochre:#D99A21;
+    --brick:#A6382C;
+    --leaf:#2F6B4F;
+    --ink:#141A26;
   }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0;height:100%}
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
   body{
-    font-family:var(--font-hand);background:var(--board);color:var(--ink);
-    overflow:hidden;-webkit-text-size-adjust:100%;
+    margin:0;background:var(--indigo);color:var(--chalk);
+    font-family:"Avenir Next","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.55;
   }
-  .shell{display:flex;flex-direction:column;height:100vh;height:100dvh}
+  h1,h2,h3,.num,.tabs button,.unit button{
+    font-family:"Futura","Gill Sans","Trebuchet MS",Avenir,sans-serif;
+    letter-spacing:.01em;
+  }
 
+  /* ---------- masthead ---------- */
   header{
-    flex:0 0 auto;display:flex;align-items:center;gap:10px;
-    padding:7px 10px;background:var(--paper);border-bottom:3px solid var(--ink);
+    padding:22px 18px 16px;border-bottom:3px solid var(--ochre);
+    background:
+      repeating-linear-gradient(135deg, rgba(217,154,33,.10) 0 14px, transparent 14px 28px),
+      var(--indigo);
   }
-  header h1{
-    flex:1;margin:0;font-size:clamp(12px,3.2vw,20px);line-height:1.2;
-    text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;
+  .wrap{max-width:1000px;margin:0 auto}
+  .eyebrow{
+    margin:0 0 6px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--ochre);
   }
-  .clock, .tally{
-    flex:0 0 auto;font-size:clamp(13px,3.4vw,19px);font-weight:bold;
-    border:3px solid var(--ink);border-radius:12px;padding:4px 10px;background:#fff;
-  }
-  .clock.low{background:#FFD9D9;color:var(--bad)}
-  .tally{background:#FFE9A8}
+  h1{margin:0;font-size:clamp(26px,6vw,48px);line-height:1.05;font-weight:600}
+  h1 em{font-style:normal;color:var(--ochre)}
+  header p.sub{margin:10px 0 0;max-width:60ch;color:#D8D2C4;font-size:15px}
 
-  main{flex:1;min-height:0;display:flex;justify-content:center;padding:8px;overflow:auto}
-  .card{
-    flex:1;min-width:0;max-width:820px;width:100%;
-    background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:10px;
+  /* ---------- tabs ---------- */
+  .tabs{
+    position:sticky;top:0;z-index:20;display:flex;gap:0;overflow-x:auto;
+    background:var(--ink);border-bottom:3px solid var(--ochre);scrollbar-width:none;
   }
-  .lead{margin:0 0 8px;font-size:clamp(11px,3vw,15px);color:#6B5A42}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{
+    flex:0 0 auto;background:none;border:0;color:#9AA3B4;cursor:pointer;
+    padding:13px 16px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+    border-bottom:4px solid transparent;
+  }
+  .tabs button[aria-selected="true"]{color:var(--chalk);border-bottom-color:var(--ochre)}
+  .tabs button:focus-visible{outline:2px solid var(--ochre);outline-offset:-4px}
 
-  .q{
-    display:flex;align-items:center;flex-wrap:wrap;gap:8px;
-    padding:8px 6px;border-bottom:2px dashed var(--rule);
+  main{max-width:1000px;margin:0 auto;padding:22px 18px 60px}
+  section{display:none}
+  section.on{display:block}
+  h2{
+    font-size:clamp(19px,4.4vw,27px);margin:0 0 4px;font-weight:600;
+    display:flex;align-items:baseline;gap:10px;
   }
-  .q:last-of-type{border-bottom:0}
-  .num{
-    flex:0 0 auto;width:26px;height:26px;border-radius:50%;
-    border:2px solid var(--ink);background:#fff;
-    display:flex;align-items:center;justify-content:center;font-size:13px;
+  h2 .num{
+    font-size:13px;color:var(--indigo);background:var(--ochre);
+    border-radius:3px;padding:2px 7px;letter-spacing:.08em;
   }
-  .expr{
-    flex:0 0 auto;font-family:var(--font-math);font-size:clamp(17px,4.6vw,26px);
-    min-width:8.5em;
-  }
-  .eq{flex:0 0 auto;font-family:var(--font-math);font-size:clamp(17px,4.6vw,26px)}
-  .slot{
-    flex:0 0 auto;min-width:clamp(78px,22vw,116px);height:clamp(38px,10vw,50px);
-    border:3px dashed var(--rule);border-radius:10px;background:#fff;
-    display:flex;align-items:center;justify-content:center;
-    font-family:var(--font-math);font-size:clamp(15px,4.2vw,22px);cursor:pointer;
-  }
-  .slot.over{border-color:var(--good);background:#EFFBEF}
-  .slot.filled{border:3px solid var(--ink);background:#FFF3D0}
-  .mark{flex:0 0 auto;font-size:clamp(16px,4.4vw,24px);width:1.4em;text-align:center}
-  .q.right .slot.filled{border-color:var(--good);background:#EFFBEF}
-  .q.wrong .slot.filled{border-color:var(--bad);background:#FFECEC}
-  .answer{
-    flex:1 1 100%;margin:2px 0 0;font-family:var(--font-math);
-    font-size:clamp(13px,3.4vw,18px);color:var(--bad);
-  }
+  .lede{margin:0 0 20px;color:#CFC9BB;max-width:62ch}
 
-  .tray{
-    flex:0 0 auto;background:linear-gradient(var(--tray2),var(--tray));
-    border-top:4px solid #241505;padding:6px 8px max(8px,env(safe-area-inset-bottom));
+  /* ---------- kraft paper panels: the workroom surface ---------- */
+  .paper{
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.035) 0 1px, transparent 1px 22px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.035) 0 1px, transparent 1px 22px),
+      var(--kraft);
+    color:var(--ink);border-radius:4px;padding:16px;margin:0 0 18px;
+    box-shadow:0 10px 24px rgba(0,0,0,.28);
   }
-  .traytop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
-  .traytop p{margin:0;color:#FFE9C4;font-size:clamp(10px,2.8vw,13px)}
-  .traytop div{display:flex;gap:6px}
-  .traytop button{
-    font-family:var(--font-hand);font-size:clamp(11px,3vw,14px);
-    padding:6px 10px;border:2px solid #241505;border-radius:9px;background:#FFE9C4;cursor:pointer;
-  }
-  .traytop button:disabled{opacity:.5;cursor:default}
-  .pool{
-    display:flex;flex-wrap:wrap;gap:7px;justify-content:center;
-    max-height:34vh;overflow-y:auto;
-  }
-  .piece{
-    flex:0 0 auto;min-width:clamp(74px,20vw,110px);height:clamp(38px,10vw,48px);
-    border:3px solid var(--ink);border-radius:11px;background:#fff;
-    font-family:var(--font-math);font-size:clamp(15px,4vw,21px);
-    display:flex;align-items:center;justify-content:center;
-    cursor:grab;touch-action:none;box-shadow:0 3px 0 #241505;
-  }
-  .piece.picked{background:#FFE9A8;transform:translateY(-3px)}
-  .piece.hidden{visibility:hidden}
-  .flying{position:fixed;z-index:60;pointer-events:none;transform:scale(1.08);
-          box-shadow:0 8px 0 rgba(36,21,5,.35)}
+  .paper h3{margin:0 0 10px;font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#4A3A22}
+  .paper svg{display:block;width:100%;height:auto}
+  .caption{margin:8px 0 0;font-size:13px;color:#4A3A22}
 
-  .over-panel{
-    position:fixed;inset:0;background:rgba(26,26,26,.55);
-    display:none;align-items:center;justify-content:center;padding:16px;z-index:70;
+  /* ---------- measurement form ---------- */
+  .unit{display:flex;gap:6px;margin:0 0 14px}
+  .unit button{
+    background:transparent;border:2px solid var(--ochre);color:var(--ochre);
+    padding:6px 14px;border-radius:2px;cursor:pointer;font-size:13px;letter-spacing:.08em;
   }
-  .over-panel.show{display:flex}
-  .sheet{
-    background:var(--paper);border:4px solid var(--ink);border-radius:16px;
-    padding:18px;max-width:340px;width:100%;text-align:center;
+  .unit button[aria-pressed="true"]{background:var(--ochre);color:var(--indigo)}
+  .fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .field label{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#4A3A22}
+  .field small{display:block;font-size:12.5px;line-height:1.35;color:#5C4A2C;text-transform:none;letter-spacing:0}
+  .field input{
+    width:100%;margin-top:6px;padding:9px 10px;font-size:17px;
+    font-family:inherit;border:2px solid #6E5836;border-radius:2px;background:var(--chalk);color:var(--ink);
   }
-  .sheet h2{margin:0 0 6px;font-size:clamp(18px,5vw,26px)}
-  .sheet .big{font-size:clamp(30px,9vw,46px);font-weight:bold;margin:6px 0}
-  .sheet p{margin:6px 0;font-size:clamp(12px,3.2vw,16px)}
-  .sheet button{
-    margin-top:10px;font-family:var(--font-hand);font-size:clamp(13px,3.6vw,17px);
-    padding:9px 16px;border:3px solid var(--ink);border-radius:12px;background:#FFE9A8;cursor:pointer;
+  .field input:focus{outline:3px solid var(--ochre);outline-offset:1px}
+
+  /* ---------- the numbers table ---------- */
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  caption{text-align:left;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#4A3A22;padding-bottom:8px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid rgba(20,26,38,.18);vertical-align:top}
+  th{font-weight:600;width:52%}
+  td.v{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+  td.v span{font-weight:400;color:#5C4A2C;font-size:13px}
+  tr.total td, tr.total th{border-top:2px solid var(--ink);border-bottom:0;padding-top:12px}
+
+  /* ---------- steps ---------- */
+  ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+  ol.steps li{
+    counter-increment:s;position:relative;padding:0 0 18px 52px;
+    border-left:2px solid var(--indigo-soft);margin-left:16px;
+  }
+  ol.steps li:last-child{border-left-color:transparent}
+  ol.steps li::before{
+    content:counter(s,decimal-leading-zero);
+    position:absolute;left:-18px;top:0;width:34px;height:34px;border-radius:50%;
+    background:var(--ochre);color:var(--indigo);display:flex;align-items:center;justify-content:center;
+    font-family:"Futura","Gill Sans",Avenir,sans-serif;font-size:13px;font-weight:700;
+  }
+  ol.steps h4{margin:4px 0 4px;font-size:17px;font-weight:600;color:var(--chalk)}
+  ol.steps p{margin:0 0 6px;color:#CFC9BB}
+  .tip{
+    display:block;margin-top:6px;padding:8px 11px;border-left:3px solid var(--leaf);
+    background:rgba(47,107,79,.16);font-size:14.5px;color:#DDE7DF;
+  }
+  .warn{border-left-color:var(--brick);background:rgba(166,56,44,.18);color:#F0DAD6}
+
+  .swatch-note{
+    margin:24px 0 0;padding:14px 16px;border:2px dashed var(--ochre);
+    font-size:14.5px;color:#E6DFCE;
+  }
+  /* dimension text inside the drawings */
+  .dim{font:600 12px/1 "Futura","Gill Sans",Avenir,sans-serif;fill:#3B2E1A}
+  .dimline{stroke:#3B2E1A;stroke-width:1.4;fill:none}
+  .cutline{stroke:var(--ink);stroke-width:2.4;fill:#EFE6D2}
+  .foldline{stroke:var(--brick);stroke-width:2.4;stroke-dasharray:10 6;fill:none}
+  .stitch{stroke:var(--indigo);stroke-width:1.6;stroke-dasharray:5 4;fill:none}
+  .plabel{font:700 14px/1 "Futura","Gill Sans",Avenir,sans-serif;fill:#3B2E1A}
+  .small{font:500 11px/1 "Futura","Gill Sans",Avenir,sans-serif;fill:#5C4A2C}
+
+  @media print{
+    body{background:#fff;color:#000}
+    .tabs,header{display:none}
+    section{display:block !important}
+    .paper{box-shadow:none;background:#fff;border:1px solid #999}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    section.on{animation:fade .25s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   }
 </style>
 </head>
 <body>
-<div class="shell">
 
 <header>
-  <h1>Factorising Practice</h1>
-  <span class="tally" id="tally">0 / 5</span>
-  <span class="clock" id="clock">5:00</span>
+  <div class="wrap">
+    <p class="eyebrow">Sillah Kanu Series · Tailoring</p>
+    <h1>Cut &amp; sew an <em>ankara short-sleeve top</em></h1>
+    <p class="sub">The everyday African print top with a round neck and drop shoulders — four
+      pattern pieces, straight seams, no zip. Put your own measurements in and every cutting
+      number on this page changes with them.</p>
+  </div>
 </header>
 
+<nav class="tabs" id="tabs" role="tablist" aria-label="Steps">
+  <button role="tab" aria-selected="true"  data-p="style">The style</button>
+  <button role="tab" aria-selected="false" data-p="measure">Measure</button>
+  <button role="tab" aria-selected="false" data-p="numbers">Cutting numbers</button>
+  <button role="tab" aria-selected="false" data-p="pieces">Pattern pieces</button>
+  <button role="tab" aria-selected="false" data-p="layout">Cut the cloth</button>
+  <button role="tab" aria-selected="false" data-p="sew">Sew it</button>
+</nav>
+
 <main>
-  <div class="card">
-    <p class="lead">Factorise each quadratic. Drag two brackets from the box below into the spaces. Either order is fine.</p>
-    <div id="questions"></div>
+
+<!-- ============ 1. STYLE ============ -->
+<section id="style" class="on">
+  <h2><span class="num">01</span> The style</h2>
+  <p class="lede">Loose through the body, short sleeves cut in one straight line from the shoulder,
+    a faced round neck and a plain hem. It suits a 6-yard ankara piece, a wax print, or kente-print
+    cotton. Two yards makes an adult top.</p>
+
+  <div class="paper">
+    <h3>Technical flat &mdash; front and back</h3>
+    <div id="flat"></div>
+    <p class="caption">Drawn to scale from your measurements, both halves mirrored from the
+      centre line, so the neck and the shoulders sit square.</p>
   </div>
+
+  <div class="paper">
+    <h3>Neck finish</h3>
+    <div class="unit" role="group" aria-label="Neck finish">
+      <button id="nRound" aria-pressed="true">Round neck</button>
+      <button id="nVee"   aria-pressed="false">V-neck</button>
+      <button id="nBand"  aria-pressed="false">Mandarin collar</button>
+    </div>
+    <p class="caption" id="neckNote">&mdash;</p>
+  </div>
+
+  <div class="paper">
+    <h3>What you need</h3>
+    <table>
+      <tr><th>African print cotton, 115 cm (45 in) wide</th><td class="v" id="fab45">—</td></tr>
+      <tr><th>or wider cloth, 150 cm (60 in)</th><td class="v" id="fab60">—</td></tr>
+      <tr><th>Matching thread</th><td class="v">1 large reel</td></tr>
+      <tr><th>Interfacing or a scrap of plain cotton for the neck facing</th><td class="v">25 × 25 cm</td></tr>
+      <tr><th>Tailor's chalk, tape measure, pins, sharp scissors</th><td class="v">—</td></tr>
+    </table>
+    <p class="caption">Ankara is usually sold in a 6-yard piece — cutting this top from it leaves
+      enough for a matching head-tie or a child's top.</p>
+  </div>
+</section>
+
+<!-- ============ 2. MEASURE ============ -->
+<section id="measure">
+  <h2><span class="num">02</span> Take the measurements</h2>
+  <p class="lede">Measure over light clothing, keeping the tape level and not tight. Write each one
+    down before you type it in — a wrong measurement here becomes a wrong cut later.</p>
+
+  <div class="paper">
+    <h3>Units</h3>
+    <div class="unit" role="group" aria-label="Units">
+      <button id="uCm" aria-pressed="true">Centimetres</button>
+      <button id="uIn" aria-pressed="false">Inches</button>
+    </div>
+
+    <div class="fields">
+      <div class="field">
+        <label for="chest">Chest / bust <span id="l1"></span></label>
+        <small>Round the fullest part, under the arms.</small>
+        <input id="chest" type="number" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="len">Top length <span id="l2"></span></label>
+        <small>From the top of the shoulder, beside the neck, down to where you want the hem.</small>
+        <input id="len" type="number" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="shoulder">Shoulder to shoulder <span id="l3"></span></label>
+        <small>Across the back, from one shoulder bone to the other.</small>
+        <input id="shoulder" type="number" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="sleeve">Sleeve length <span id="l4"></span></label>
+        <small>From the shoulder bone down the arm — about 22 cm for a short sleeve.</small>
+        <input id="sleeve" type="number" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="neck">Neck <span id="l5"></span></label>
+        <small>Round the base of the neck, one finger loose.</small>
+        <input id="neck" type="number" step="0.5" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label for="ease">Looseness added to the chest <span id="l6"></span></label>
+        <small>20 cm is the usual loose ankara fit. Use 12 cm for a closer fit.</small>
+        <input id="ease" type="number" step="0.5" inputmode="decimal">
+      </div>
+    </div>
+    <p class="caption">The page starts with a medium adult set so you can see how it works. Change
+      any box and the cutting numbers, the pattern pieces and the cloth layout all follow.</p>
+  </div>
+</section>
+
+<!-- ============ 3. NUMBERS ============ -->
+<section id="numbers">
+  <h2><span class="num">03</span> Your cutting numbers</h2>
+  <p class="lede">These are the numbers to chalk onto the cloth. Every one already includes
+    <strong>1.5 cm seam allowance</strong> on the seams and <strong>2.5 cm</strong> turned up for
+    the hems, so cut exactly on the lines you draw.</p>
+
+  <div class="paper">
+    <table>
+      <caption>Front and back panels — cut 1 of each on the fold</caption>
+      <tr><th>Fold to side edge (half the panel)</th><td class="v" id="n_half">—</td></tr>
+      <tr><th>Full panel width when opened out</th><td class="v" id="n_full">—</td></tr>
+      <tr><th>Length to cut</th><td class="v" id="n_len">—</td></tr>
+      <tr><th>Armhole depth, measured down from the shoulder line</th><td class="v" id="n_arm">—</td></tr>
+      <tr><th>Shoulder point, measured out from the fold</th><td class="v" id="n_sh">—</td></tr>
+      <tr><th>Shoulder slope (drop at the outer end)</th><td class="v" id="n_slope">—</td></tr>
+      <tr><th>Neck width from the fold</th><td class="v" id="n_nw">—</td></tr>
+      <tr><th>Front neck drop</th><td class="v" id="n_fd">—</td></tr>
+      <tr><th>Back neck drop</th><td class="v" id="n_bd">—</td></tr>
+    </table>
+  </div>
+
+  <div class="paper">
+    <table>
+      <caption>Sleeves — cut 2</caption>
+      <tr><th>Top edge (this is what meets the armhole)</th><td class="v" id="n_stop">—</td></tr>
+      <tr><th>Cuff edge</th><td class="v" id="n_scuff">—</td></tr>
+      <tr><th>Length to cut</th><td class="v" id="n_slen">—</td></tr>
+      <tr class="total"><th>Check: armhole opening, front + back</th><td class="v" id="n_check">—</td></tr>
+    </table>
+    <p class="caption">The sleeve top edge and the armhole opening must match. If they differ by more
+      than a centimetre, re-check the armhole depth before you cut.</p>
+  </div>
+
+  <div class="paper">
+    <table>
+      <caption>Neck facing — cut 1 on the fold</caption>
+      <tr><th>Depth all round</th><td class="v">5 cm</td></tr>
+      <tr><th>Cut it from</th><td class="v">the same shape as the front and back necklines</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 4. PIECES ============ -->
+<section id="pieces">
+  <h2><span class="num">04</span> The pattern pieces</h2>
+  <p class="lede">Draw these on brown paper first, cut the paper, then pin the paper to the cloth.
+    Paper costs less than cloth, and you can keep it for the next one.</p>
+
+  <div class="paper">
+    <h3>Front panel — cut 1 on the fold</h3>
+    <svg viewBox="0 0 620 420" role="img" aria-label="Front panel pattern piece with dimensions">
+      <!-- panel -->
+      <path class="cutline" id="frontShape"
+        d="M70,60 L70,380 L330,380 L330,120 L330,60 L200,60 Z"/>
+      <!-- fold edge -->
+      <line class="foldline" x1="70" y1="50" x2="70" y2="390"/>
+      <text class="small" x="24" y="220" transform="rotate(-90 24,220)">FOLD — no seam here</text>
+
+      <!-- shoulder + neck -->
+      <path class="cutline" fill="none" d="M70,60 L130,60 A70,70 0 0 0 200,96 L200,96"/>
+      <!-- dimension: fold to side -->
+      <path class="dimline" d="M70,404 H330 M70,398 v12 M330,398 v12"/>
+      <text class="dim" id="d_half" x="200" y="418" text-anchor="middle">—</text>
+      <!-- dimension: length -->
+      <path class="dimline" d="M350,60 V380 M344,60 h12 M344,380 h12"/>
+      <text class="dim" id="d_len" x="360" y="220">—</text>
+      <!-- dimension: armhole depth -->
+      <path class="dimline" d="M300,60 V180 M294,60 h12 M294,180 h12"/>
+      <text class="dim" id="d_arm" x="308" y="124">—</text>
+      <!-- shoulder point -->
+      <path class="dimline" d="M70,40 H200 M70,34 v12 M200,34 v12"/>
+      <text class="dim" id="d_sh" x="135" y="30" text-anchor="middle">—</text>
+      <!-- neck width + drop -->
+      <path class="dimline" d="M70,74 H130 M70,68 v12 M130,68 v12"/>
+      <text class="dim" id="d_nw" x="100" y="92" text-anchor="middle">—</text>
+      <path class="dimline" d="M56,60 V96 M50,60 h12 M50,96 h12"/>
+      <text class="dim" id="d_fd" x="0" y="82">—</text>
+      <text class="plabel" x="150" y="250">FRONT</text>
+      <text class="small" x="150" y="270">cut 1 on the fold</text>
+      <text class="small" x="150" y="290" id="d_side">side seam</text>
+    </svg>
+    <p class="caption">The back is the same piece with a shallower neck — see below.</p>
+  </div>
+
+  <div class="paper">
+    <h3>Back panel — cut 1 on the fold</h3>
+    <svg viewBox="0 0 620 420" role="img" aria-label="Back panel pattern piece with dimensions">
+      <path class="cutline" d="M70,60 L70,380 L330,380 L330,120 L330,60 L200,60 Z"/>
+      <line class="foldline" x1="70" y1="50" x2="70" y2="390"/>
+      <text class="small" x="24" y="220" transform="rotate(-90 24,220)">FOLD — no seam here</text>
+      <path class="cutline" fill="none" d="M70,60 L130,60 A62,62 0 0 0 200,74"/>
+      <path class="dimline" d="M56,60 V74 M50,60 h12 M50,74 h12"/>
+      <text class="dim" id="d_bd" x="0" y="70">—</text>
+      <path class="dimline" d="M70,404 H330 M70,398 v12 M330,398 v12"/>
+      <text class="dim" id="d_half2" x="200" y="418" text-anchor="middle">—</text>
+      <path class="dimline" d="M350,60 V380 M344,60 h12 M344,380 h12"/>
+      <text class="dim" id="d_len2" x="360" y="220">—</text>
+      <text class="plabel" x="150" y="250">BACK</text>
+      <text class="small" x="150" y="270">cut 1 on the fold</text>
+    </svg>
+  </div>
+
+  <div class="paper">
+    <h3>Sleeve — cut 2</h3>
+    <svg viewBox="0 0 620 360" role="img" aria-label="Sleeve pattern piece with dimensions">
+      <path class="cutline" d="M90,60 L470,60 L420,300 L140,300 Z"/>
+      <path class="dimline" d="M90,44 H470 M90,38 v12 M470,38 v12"/>
+      <text class="dim" id="d_stop" x="280" y="34" text-anchor="middle">—</text>
+      <path class="dimline" d="M140,320 H420 M140,314 v12 M420,314 v12"/>
+      <text class="dim" id="d_scuff" x="280" y="340" text-anchor="middle">—</text>
+      <path class="dimline" d="M492,60 V300 M486,60 h12 M486,300 h12"/>
+      <text class="dim" id="d_slen" x="502" y="184">—</text>
+      <text class="plabel" x="250" y="160">SLEEVE</text>
+      <text class="small" x="250" y="180">cut 2 — one for each arm</text>
+      <text class="small" x="250" y="200">top edge goes to the armhole</text>
+      <text class="small" x="176" y="290">underarm seam</text>
+    </svg>
+    <p class="caption">A straight tapered sleeve like this is what most tailors here cut for a
+      drop-shoulder top. It needs no gathering at the top.</p>
+  </div>
+</section>
+
+<!-- ============ 5. LAYOUT ============ -->
+<section id="layout">
+  <h2><span class="num">05</span> Cutting the cloth</h2>
+  <p class="lede">Ankara has a printed right side and a plain wrong side. Fold with the
+    <strong>right sides facing each other</strong> so your chalk marks stay on the inside.</p>
+
+  <div class="paper">
+    <h3>Layout on 115 cm cloth, folded down the middle</h3>
+    <svg viewBox="0 0 700 380" role="img" aria-label="How to lay the pieces on folded cloth">
+      <rect x="30" y="30" width="640" height="310" fill="#EFE6D2" stroke="#141A26" stroke-width="2.4"/>
+      <line class="foldline" x1="30" y1="185" x2="670" y2="185"/>
+      <text class="small" x="36" y="180">FOLD of the cloth</text>
+      <text class="small" x="36" y="24">selvedge</text>
+      <text class="small" x="36" y="356">selvedge</text>
+
+      <rect x="50" y="60" width="240" height="240" fill="rgba(27,42,74,.14)" stroke="#1B2A4A" stroke-width="2"/>
+      <text class="plabel" x="70" y="150">FRONT</text>
+      <text class="small" x="70" y="168">on the fold</text>
+
+      <rect x="310" y="60" width="240" height="240" fill="rgba(27,42,74,.14)" stroke="#1B2A4A" stroke-width="2"/>
+      <text class="plabel" x="330" y="150">BACK</text>
+      <text class="small" x="330" y="168">on the fold</text>
+
+      <rect x="566" y="60" width="86" height="110" fill="rgba(217,154,33,.28)" stroke="#A6382C" stroke-width="2"/>
+      <text class="small" x="574" y="112">SLEEVE</text>
+      <rect x="566" y="192" width="86" height="110" fill="rgba(217,154,33,.28)" stroke="#A6382C" stroke-width="2"/>
+      <text class="small" x="574" y="244">SLEEVE</text>
+    </svg>
+    <p class="caption" id="lay_note">—</p>
+  </div>
+
+  <ol class="steps">
+    <li>
+      <h4>Straighten the cloth first</h4>
+      <p>Pull a thread across the cut end and cut along that line, or tear across the grain. A crooked
+        start twists the whole top.</p>
+    </li>
+    <li>
+      <h4>Fold and pin</h4>
+      <p>Fold the cloth along its length, right sides together, selvedges level. Pin the two layers
+        together every hand-span so nothing shifts.</p>
+      <span class="tip">Check the print direction now. If the pattern has flowers or figures that
+        stand up, both panels must run the same way up.</span>
+    </li>
+    <li>
+      <h4>Chalk the front panel against the fold</h4>
+      <p id="s_front">—</p>
+    </li>
+    <li>
+      <h4>Chalk the neckline and the armhole</h4>
+      <p id="s_neck">—</p>
+      <span class="tip">Cut the front neck last. If it comes out too high you can still lower it,
+        but cloth cut away never comes back.</span>
+    </li>
+    <li>
+      <h4>Chalk the back panel the same way</h4>
+      <p id="s_back">—</p>
+    </li>
+    <li>
+      <h4>Chalk both sleeves</h4>
+      <p id="s_sleeve">—</p>
+    </li>
+    <li>
+      <h4>Cut, and mark before you unpin</h4>
+      <p>Cut with long strokes, keeping the scissors on the table. Before unpinning, snip a small
+        notch at the middle of each sleeve top edge and at the shoulder line of the panels — those
+        notches are how you line the pieces up at the machine.</p>
+      <span class="tip warn">Cut the neck facing from the leftover cloth using the neckline you have
+        just cut as the guide, 5 cm wide all round.</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ============ 6. SEW ============ -->
+<section id="sew">
+  <h2><span class="num">06</span> Sewing it together</h2>
+  <p class="lede">Seams are 1.5 cm. Press every seam as you finish it — pressing is what separates a
+    home-made look from a tailored one.</p>
+
+  <ol class="steps">
+    <li>
+      <h4>Join the shoulders</h4>
+      <p>Right sides together, stitch the front to the back along both shoulder lines. Neaten the raw
+        edges with a zigzag or an overlocker, then press them towards the back.</p>
+    </li>
+    <li>
+      <h4>Face the neck</h4>
+      <p>Join the facing at its shoulders too, and press. Pin it to the neck edge, right sides
+        together, matching the shoulder seams. Stitch all round 1 cm from the edge, then trim the
+        seam back to 6 mm and clip small V-notches around the curve so it will lie flat.</p>
+      <span class="tip">Understitch: turn the facing out and stitch it to the seam allowance close to
+        the seam. This stops the facing rolling to the outside when it is worn.</span>
+    </li>
+    <li>
+      <h4>Set in the sleeves flat</h4>
+      <p>With the top still open at the sides, lay a sleeve on the armhole, right sides together,
+        matching the notch at the sleeve top to the shoulder seam. Stitch, neaten and press towards
+        the sleeve. Do the second sleeve the same way.</p>
+      <span class="tip">Sewing the sleeve in while the side seams are still open is far easier than
+        setting it into a closed armhole, and it is how a drop-shoulder top is meant to be made.</span>
+    </li>
+    <li>
+      <h4>Close each side in one seam</h4>
+      <p>Fold the top right sides together. Starting at the cuff, stitch down the sleeve underarm and
+        straight on down the side of the body to the hem, in one line. Do the same on the other side.</p>
+      <span class="tip warn">Match the underarm seams exactly where they cross. A step there shows
+        every time the wearer lifts an arm.</span>
+    </li>
+    <li>
+      <h4>Hem the sleeves and the bottom</h4>
+      <p>Turn 1 cm to the wrong side, press, turn another 1.5 cm, press again, then stitch close to
+        the fold. Work the sleeve hems on the machine's smallest area, or by hand if the opening is
+        tight.</p>
+    </li>
+    <li>
+      <h4>Press, and check the fit</h4>
+      <p>Press the finished top: shoulders first, then the sleeves, then the body, then the hem. Try
+        it on and note anything to change — write it on your paper pattern so the next one is better.</p>
+      <span class="tip">Keep the paper pieces with the measurements written on them. That is how a
+        tailor builds a set of blocks that fit real customers.</span>
+    </li>
+  </ol>
+
+  <p class="swatch-note">Before cutting good ankara, make this once in cheap cotton or an old
+    wrapper. A test garment tells you in an hour what a ruined 6-yard piece teaches the hard way.</p>
+</section>
+
 </main>
 
-<div class="tray">
-  <div class="traytop">
-    <p id="hint">Drag the brackets up into the spaces</p>
-    <div>
-      <button id="mark">Mark my work</button>
-      <button id="fresh">New 5 questions</button>
-    </div>
-  </div>
-  <div class="pool" id="pool"></div>
-</div>
-
-</div>
-
-<div class="over-panel" id="overPanel">
-  <div class="sheet">
-    <h2 id="overTitle">Time is up</h2>
-    <p class="big" id="overScore">0 / 5</p>
-    <p id="overTime"></p>
-    <p id="overNote"></p>
-    <button id="overAgain">New 5 questions</button>
-  </div>
-</div>
-
 <script>
-/* ================= the question bank ================= */
-const BANK = [
-  {q:"x\u00B2 + 5x + 6",   a:["(x+2)","(x+3)"]},
-  {q:"x\u00B2 + 7x + 12",  a:["(x+3)","(x+4)"]},
-  {q:"x\u00B2 + 9x + 20",  a:["(x+4)","(x+5)"]},
-  {q:"x\u00B2 + 8x + 7",   a:["(x+1)","(x+7)"]},
-  {q:"x\u00B2 + 6x + 8",   a:["(x+2)","(x+4)"]},
-  {q:"x\u00B2 + 10x + 21", a:["(x+3)","(x+7)"]},
-  {q:"x\u00B2 + 11x + 24", a:["(x+3)","(x+8)"]},
-  {q:"x\u00B2 \u2212 5x + 6",  a:["(x\u22122)","(x\u22123)"]},
-  {q:"x\u00B2 \u2212 7x + 10", a:["(x\u22122)","(x\u22125)"]},
-  {q:"x\u00B2 \u2212 9x + 18", a:["(x\u22123)","(x\u22126)"]},
-  {q:"x\u00B2 \u2212 8x + 15", a:["(x\u22123)","(x\u22125)"]},
-  {q:"x\u00B2 + x \u2212 6",   a:["(x+3)","(x\u22122)"]},
-  {q:"x\u00B2 + 2x \u2212 8",  a:["(x+4)","(x\u22122)"]},
-  {q:"x\u00B2 \u2212 x \u2212 12",  a:["(x+3)","(x\u22124)"]},
-  {q:"x\u00B2 \u2212 2x \u2212 15", a:["(x+3)","(x\u22125)"]},
-  {q:"x\u00B2 + 3x \u2212 10",  a:["(x+5)","(x\u22122)"]},
-  {q:"x\u00B2 \u2212 4x \u2212 21", a:["(x+3)","(x\u22127)"]},
-  {q:"x\u00B2 + 4x \u2212 12",  a:["(x+6)","(x\u22122)"]}
-];
-const SPARE = ["(x+1)","(x+6)","(x+9)","(x\u22121)","(x\u22124)","(x\u22126)","(x+8)","(x\u22128)"];
+/* ---------------- units ---------------- */
+let inches = false;
+const CM_PER_IN = 2.54;
 
-const TOTAL_TIME = 5 * 60;          // five minutes
-let quiz = [];                      // the five questions in play
-let left = TOTAL_TIME;
-let ticker = null;
-let started = false;
-let finished = false;
-let picked = null;                  // piece chosen by tapping
+/* stored in centimetres, whatever the person types */
+const M = {chest:100, len:76, shoulder:46, sleeve:22, neck:40, ease:20};
+const FIELDS = ["chest","len","shoulder","sleeve","neck","ease"];
 
-const qBox   = document.getElementById("questions");
-const poolEl = document.getElementById("pool");
-const clockEl = document.getElementById("clock");
-const tallyEl = document.getElementById("tally");
-
-function shuffle(a){
-  for(let i = a.length-1; i > 0; i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function toDisplay(cm){ return inches ? cm / CM_PER_IN : cm; }
+function toCm(v){ return inches ? v * CM_PER_IN : v; }
+function r(n){ return Math.round(n * 2) / 2; }                 // nearest half
+function show(cm){
+  const v = toDisplay(cm);
+  const txt = (Math.round(v * 10) / 10).toFixed(1).replace(/\.0$/, "");
+  return txt + (inches ? " in" : " cm");
+}
+function both(cm){
+  return '<span>' + show(cm) + '</span>';
 }
 
-/* ================= build a fresh set ================= */
-function build(){
-  clearInterval(ticker);
-  started = false; finished = false;
-  left = TOTAL_TIME;
-  picked = null;
-  showClock();
-  tallyEl.textContent = "0 / 5";
-  document.getElementById("overPanel").classList.remove("show");
-  document.getElementById("mark").disabled = false;
-  document.getElementById("hint").textContent = "Drag the brackets up into the spaces";
+/* ---------------- the drafting ---------------- */
+function draft(){
+  const SA = 1.5, HEM = 2.5;
+  const half  = (M.chest + M.ease) / 4 + SA;         // fold to side edge
+  const full  = half * 2;
+  const len   = M.len + SA + HEM;                    // shoulder seam + bottom hem
+  const arm   = M.chest / 8 + 10;                    // armhole depth from shoulder line
+  const sh    = M.shoulder / 2 + SA;                 // shoulder point out from the fold
+  const slope = 2;
+  const nw    = M.neck / 5;                          // neck width from the fold
+  const fd    = M.neck / 5 + 1;                      // front neck drop
+  const bd    = 2.5;                                 // back neck drop
+  const stop  = 2 * arm + SA * 2;                    // sleeve top edge
+  const scuff = stop - 8;                            // taper 4 cm each side
+  const slen  = M.sleeve + SA + HEM;
+  const check = 2 * arm;                             // armhole opening front + back
+  const fab45 = 2 * len + slen + 10;                 // panels stacked, sleeves beside
+  const fab60 = len + slen + 10;
+  return {half:r(half), full:r(full), len:r(len), arm:r(arm), sh:r(sh), slope,
+          nw:r(nw), fd:r(fd), bd, stop:r(stop), scuff:r(scuff), slen:r(slen),
+          check:r(check), fab45, fab60};
+}
 
-  quiz = shuffle([...BANK]).slice(0,5);
+/* ---------------- put the numbers on the page ---------------- */
+function paint(){
+  const d = draft();
+  const set = (id, cm)=>{ const el = document.getElementById(id); if(el) el.innerHTML = show(cm); };
 
-  qBox.innerHTML = "";
-  quiz.forEach((item,i)=>{
-    const row = document.createElement("div");
-    row.className = "q"; row.dataset.i = i;
-    row.innerHTML =
-      '<span class="num">' + (i+1) + '</span>' +
-      '<span class="expr">' + item.q + '</span>' +
-      '<span class="eq">=</span>' +
-      '<div class="slot" data-q="' + i + '" data-s="0"></div>' +
-      '<div class="slot" data-q="' + i + '" data-s="1"></div>' +
-      '<span class="mark"></span>';
-    qBox.appendChild(row);
+  set("n_half", d.half);  set("n_full", d.full);   set("n_len", d.len);
+  set("n_arm", d.arm);    set("n_sh", d.sh);       set("n_slope", d.slope);
+  set("n_nw", d.nw);      set("n_fd", d.fd);       set("n_bd", d.bd);
+  set("n_stop", d.stop);  set("n_scuff", d.scuff); set("n_slen", d.slen);
+  set("n_check", d.check);
+
+  // metres of cloth, always shown in metres and yards
+  const m45 = Math.ceil(d.fab45 / 10) / 10, m60 = Math.ceil(d.fab60 / 10) / 10;
+  document.getElementById("fab45").textContent =
+    m45.toFixed(1) + " m  (" + (m45 * 1.0936).toFixed(1) + " yd)";
+  document.getElementById("fab60").textContent =
+    m60.toFixed(1) + " m  (" + (m60 * 1.0936).toFixed(1) + " yd)";
+
+  // labels on the drawings
+  const put = (id, txt)=>{ const el = document.getElementById(id); if(el) el.textContent = txt; };
+  put("d_half", show(d.half));   put("d_half2", show(d.half));
+  put("d_len", show(d.len));     put("d_len2", show(d.len));
+  put("d_arm", show(d.arm));     put("d_sh", show(d.sh));
+  put("d_nw", show(d.nw));       put("d_fd", show(d.fd));  put("d_bd", show(d.bd));
+  put("d_stop", show(d.stop));   put("d_scuff", show(d.scuff)); put("d_slen", show(d.slen));
+
+  put("lay_note", "You need " + m45.toFixed(1) + " m of 115 cm cloth for this size: two panels of "
+      + show(d.len) + " one after the other, with the two sleeves cut from the width beside them.");
+
+  put("s_front", "Measure " + show(d.half) + " out from the fold and " + show(d.len)
+      + " down it, and chalk the rectangle. Mark the shoulder line across the top, then measure "
+      + show(d.arm) + " down from it on the side edge — that is where the armhole ends and the side seam begins.");
+  put("s_neck", "From the fold along the shoulder line, measure " + show(d.nw)
+      + " and mark. Come " + show(d.fd) + " straight down the fold and mark again. Join those two marks in a smooth curve. "
+      + "For the shoulder, measure " + show(d.sh) + " out from the fold and drop " + show(d.slope)
+      + " below the shoulder line, then draw from the neck mark to that point.");
+  put("s_back", "Exactly the same rectangle and shoulder, but the neck drops only "
+      + show(d.bd) + " instead of " + show(d.fd) + ". Keep the two pieces together so you can see the difference.");
+  put("s_sleeve", "Each sleeve is " + show(d.stop) + " across the top, " + show(d.scuff)
+      + " across the cuff and " + show(d.slen) + " long, with the sides drawn straight between them. "
+      + "Check that " + show(d.stop) + " matches the armhole opening of " + show(d.check) + " plus seam allowance before you cut.");
+}
+
+/* ---------------- inputs ---------------- */
+function fillInputs(){
+  FIELDS.forEach(k=>{
+    const el = document.getElementById(k === "len" ? "len" : k);
+    el.value = (Math.round(toDisplay(M[k]) * 10) / 10).toString();
   });
-
-  // every bracket the five answers need, plus a few spares to think about
-  const need = [];
-  quiz.forEach(item => item.a.forEach(f => need.push(f)));
-  const spares = shuffle([...SPARE]).filter(s => true).slice(0,4);
-  const pieces = shuffle([...need, ...spares]);
-  poolEl.innerHTML = "";
-  pieces.forEach(p=>{
-    const b = document.createElement("button");
-    b.className = "piece"; b.textContent = p; b.dataset.f = p;
-    poolEl.appendChild(b);
-  });
-}
-
-/* ================= the clock ================= */
-function showClock(){
-  const m = Math.floor(left/60), s = left % 60;
-  clockEl.textContent = m + ":" + String(s).padStart(2,"0");
-  clockEl.classList.toggle("low", left <= 60);
-}
-function startClock(){
-  if(started || finished) return;
-  started = true;
-  ticker = setInterval(()=>{
-    left--;
-    showClock();
-    if(left <= 0){
-      clearInterval(ticker);
-      finish(true);
-    }
-  }, 1000);
-}
-
-/* ================= filling the spaces ================= */
-function slotsOf(i){ return [...qBox.querySelectorAll('.slot[data-q="' + i + '"]')]; }
-
-function place(piece, slot){
-  if(finished) return;
-  startClock();
-  // whatever was in the slot goes back to the box
-  if(slot.dataset.f) returnPiece(slot);
-  slot.textContent = piece.dataset.f;
-  slot.dataset.f = piece.dataset.f;
-  slot.classList.add("filled");
-  piece.remove();
-  clearPick();
-  countFilled();
-}
-function returnPiece(slot){
-  if(!slot.dataset.f) return;
-  const b = document.createElement("button");
-  b.className = "piece"; b.textContent = slot.dataset.f; b.dataset.f = slot.dataset.f;
-  poolEl.appendChild(b);
-  slot.textContent = ""; delete slot.dataset.f;
-  slot.classList.remove("filled");
-  countFilled();
-}
-function countFilled(){
-  const filled = qBox.querySelectorAll(".slot.filled").length;
-  document.getElementById("hint").textContent =
-    filled === 10 ? "All done — press Mark my work" : (filled + " of 10 brackets placed");
-  return filled;
-}
-function clearPick(){
-  picked = null;
-  [...poolEl.children].forEach(p=>p.classList.remove("picked"));
-}
-
-/* ================= dragging ================= */
-let drag = null;
-function slotAt(x,y){
-  const all = [...qBox.querySelectorAll(".slot")];
-  for(const s of all){
-    const r = s.getBoundingClientRect();
-    if(x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return s;
+  const unit = inches ? "(in)" : "(cm)";
+  for(let i = 1; i <= 6; i++){
+    const el = document.getElementById("l" + i);
+    if(el) el.textContent = unit;
   }
-  return null;
 }
-poolEl.addEventListener("pointerdown", e=>{
-  const piece = e.target.closest(".piece");
-  if(!piece || finished) return;
-  try{ piece.setPointerCapture(e.pointerId); }catch(err){}
-  const r = piece.getBoundingClientRect();
-  const ghost = piece.cloneNode(true);
-  ghost.classList.add("flying");
-  ghost.style.width = r.width + "px"; ghost.style.height = r.height + "px";
-  ghost.style.left = r.left + "px";   ghost.style.top = r.top + "px";
-  document.body.appendChild(ghost);
-  piece.classList.add("hidden");
-  drag = {piece, ghost, id:e.pointerId, dx:e.clientX-r.left, dy:e.clientY-r.top,
-          moved:false, sx:e.clientX, sy:e.clientY};
-});
-window.addEventListener("pointermove", e=>{
-  if(!drag || e.pointerId !== drag.id) return;
-  drag.ghost.style.left = (e.clientX - drag.dx) + "px";
-  drag.ghost.style.top  = (e.clientY - drag.dy) + "px";
-  if(Math.hypot(e.clientX-drag.sx, e.clientY-drag.sy) > 6) drag.moved = true;
-  const s = slotAt(e.clientX, e.clientY);
-  qBox.querySelectorAll(".slot").forEach(x=>x.classList.toggle("over", x === s && !finished));
-});
-window.addEventListener("pointerup", e=>{
-  if(!drag || e.pointerId !== drag.id) return;
-  const {piece, ghost, moved} = drag;
-  ghost.remove();
-  piece.classList.remove("hidden");
-  qBox.querySelectorAll(".slot").forEach(x=>x.classList.remove("over"));
-  drag = null;
-  if(moved){
-    const s = slotAt(e.clientX, e.clientY);
-    if(s) place(piece, s);
-  }else{
-    clearPick();
-    picked = piece;
-    piece.classList.add("picked");
-  }
-});
-window.addEventListener("pointercancel", ()=>{
-  if(!drag) return;
-  drag.ghost.remove();
-  drag.piece.classList.remove("hidden");
-  qBox.querySelectorAll(".slot").forEach(x=>x.classList.remove("over"));
-  drag = null;
-});
-
-qBox.addEventListener("click", e=>{
-  const slot = e.target.closest(".slot");
-  if(!slot || finished) return;
-  if(picked){ place(picked, slot); return; }
-  returnPiece(slot);                     // tap a filled space to take it back
-});
-
-/* ================= marking ================= */
-function finish(byClock){
-  if(finished) return;
-  finished = true;
-  clearInterval(ticker);
-  let score = 0;
-  quiz.forEach((item,i)=>{
-    const row = qBox.querySelector('.q[data-i="' + i + '"]');
-    const got = slotsOf(i).map(s => s.dataset.f || "").filter(Boolean).sort();
-    const want = [...item.a].sort();
-    const ok = got.length === 2 && got[0] === want[0] && got[1] === want[1];
-    row.classList.add(ok ? "right" : "wrong");
-    row.querySelector(".mark").textContent = ok ? "\u2713" : "\u2717";
-    row.querySelector(".mark").style.color = ok ? "var(--good)" : "var(--bad)";
-    if(ok) score++;
-    else if(!row.querySelector(".answer")){
-      const p = document.createElement("p");
-      p.className = "answer";
-      p.textContent = "Answer: " + item.a.join("");
-      row.appendChild(p);
-    }
+FIELDS.forEach(k=>{
+  document.getElementById(k).addEventListener("input", e=>{
+    const v = parseFloat(e.target.value);
+    if(!isFinite(v) || v <= 0) return;
+    M[k] = toCm(v);
+    paint();
   });
-  tallyEl.textContent = score + " / 5";
-  document.getElementById("mark").disabled = true;
-  const used = TOTAL_TIME - left;
-  document.getElementById("overTitle").textContent = byClock ? "Time is up" : "Finished";
-  document.getElementById("overScore").textContent = score + " / 5";
-  document.getElementById("overTime").textContent =
-    byClock ? "You used the whole five minutes."
-            : "Time used: " + Math.floor(used/60) + ":" + String(used%60).padStart(2,"0");
-  document.getElementById("overNote").textContent =
-    score === 5 ? "Every one correct." : "The correct answers are shown on the sheet.";
-  document.getElementById("overPanel").classList.add("show");
-  document.getElementById("hint").textContent = "Marked — press New 5 questions to practise again";
+});
+document.getElementById("uCm").onclick = ()=>setUnits(false);
+document.getElementById("uIn").onclick = ()=>setUnits(true);
+function setUnits(useInches){
+  inches = useInches;
+  document.getElementById("uCm").setAttribute("aria-pressed", !inches);
+  document.getElementById("uIn").setAttribute("aria-pressed", inches);
+  fillInputs();
+  paint();
 }
 
-document.getElementById("mark").onclick = ()=>finish(false);
-document.getElementById("fresh").onclick = build;
-document.getElementById("overAgain").onclick = build;
+/* ---------------- tabs ---------------- */
+const tabs = [...document.querySelectorAll(".tabs button")];
+tabs.forEach(t=>{
+  t.onclick = ()=>{
+    tabs.forEach(o=>o.setAttribute("aria-selected", o === t));
+    document.querySelectorAll("main section").forEach(s=>
+      s.classList.toggle("on", s.id === t.dataset.p));
+    window.scrollTo({top:0, behavior:"smooth"});
+  };
+});
 
-build();
+fillInputs();
+paint();
 </script>
 </body>
 </html>
