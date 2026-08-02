@@ -1,334 +1,459 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App &amp; Tools · NMDR · NMCP Sierra Leone</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Sillah Kanu Series — Writing Practice</title>
 <style>
-:root{
-  --blue-dark:#0b3d68; --blue:#1565a8; --blue-light:#3f8fd0; --gold:#d4a017;
-  --green:#28a745; --amber:#e6a700; --red:#dc3545;
-  --bg:#eef2f6; --soft:#e8f1f9; --border:#d5dee7; --text:#1b2733; --muted:#6b7987;
-}
-*{ box-sizing:border-box; }
-html,body{ margin:0; height:100%; max-width:100%; overflow-x:hidden; }
-body{ font-family:'Agency FB','Arial Narrow',Arial,sans-serif; background:var(--bg);
-  color:var(--text); font-size:14px; line-height:1.5; display:flex; flex-direction:column; min-height:100dvh; }
-input,select,textarea{ font-size:16px; }
+  :root{
+    --paper:#FFFDF6;
+    --board:#F3EAD6;
+    --ink:#1A1A1A;
+    --rule:#D8CBAE;
+    --tray:#3E2A18;
+    --tray2:#573A21;
+    --cw:44px;
+    --font-hand:"Comic Sans MS","Chalkboard SE","Segoe Print","Trebuchet MS",sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%}
+  body{
+    font-family:var(--font-hand);background:var(--board);color:var(--ink);
+    overflow:hidden;-webkit-text-size-adjust:100%;
+  }
+  .shell{display:flex;flex-direction:column;height:100vh;height:100dvh}
+  .col{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
 
-.app-header{ flex:none; background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 60%,var(--blue-light) 100%);
-  color:#fff; padding:14px 16px 12px; text-align:center; }
-.app-header .org{ font-size:9.5px; font-weight:600; letter-spacing:.5px; opacity:.9; }
-.app-header .title{ font-size:16px; font-weight:800; text-transform:uppercase; color:var(--gold); letter-spacing:.5px; margin-top:2px; }
-.app-header .sub{ font-size:11.5px; opacity:.85; margin-top:3px; }
+  header{
+    flex:0 0 auto;text-align:center;padding:7px 10px;
+    background:var(--paper);border-bottom:3px solid var(--ink);
+  }
+  header h1{
+    margin:0;font-size:clamp(13px,3.6vw,24px);line-height:1.2;
+    text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;
+  }
+  header p{margin:4px 0 0;font-size:clamp(10px,2.6vw,13px);color:#6B5A42}
 
-.wrap{ flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  padding:16px 14px 40px; max-width:840px; margin:0 auto; width:100%; }
+  .strip{
+    flex:0 0 auto;display:flex;gap:5px;overflow-x:auto;padding:6px 8px;
+    background:var(--paper);border-bottom:2px solid var(--rule);scrollbar-width:none;
+  }
+  .strip::-webkit-scrollbar{display:none}
+  .strip button{
+    flex:0 0 auto;min-width:38px;height:34px;padding:0 6px;border-radius:9px;
+    border:2px solid var(--ink);background:#fff;
+    font-family:var(--font-hand);font-size:15px;font-weight:bold;cursor:pointer;
+  }
+  .strip button[aria-current="true"]{background:var(--ink);color:#fff}
+  .strip button.done{background:#FFE9A8}
+  .strip button.done[aria-current="true"]{background:var(--ink);color:#fff}
 
-.head{ display:flex; align-items:center; gap:10px; margin:4px 0 10px; }
-.head h2{ font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px;
-  color:var(--blue-dark); margin:0; white-space:nowrap; }
-.head .rule{ flex:1 1 auto; height:2px; background:var(--border); }
-.head .count{ font-size:11px; font-weight:700; color:var(--muted); white-space:nowrap; }
+  main{flex:1;min-width:0;min-height:0;display:flex;justify-content:center;padding:8px;overflow:hidden}
+  .card{
+    flex:1;min-width:0;min-height:0;max-width:900px;width:100%;
+    display:flex;flex-direction:column;gap:8px;
+    background:var(--paper);border:3px solid var(--ink);border-radius:14px;padding:10px;
+  }
 
-.src{ background:#fff; border:1px dashed var(--border); border-radius:12px;
-  padding:11px 13px; font-size:12px; color:var(--muted); margin-bottom:14px; }
-.src b{ color:var(--blue-dark); }
-.src .link{ word-break:break-all; color:var(--blue); }
-.src .acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:9px; }
+  .head{flex:0 0 auto;text-align:center}
+  .phrase{display:inline;margin:0;font-size:clamp(16px,4.6vw,28px);vertical-align:middle}
+  .say{
+    display:inline-block;vertical-align:middle;margin-left:9px;cursor:pointer;
+    width:clamp(30px,8vw,40px);height:clamp(30px,8vw,40px);
+    border:2px solid var(--ink);border-radius:50%;background:#FFF3D0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 9h4l5-4v14l-5-4H4z' fill='%231A1A1A'/><path d='M16.5 8.5c1.8 1.8 1.8 5.2 0 7M19.5 6c3 3 3 9 0 12' stroke='%231A1A1A' stroke-width='2' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;background-position:center;background-size:60% 60%;
+  }
+  .say:active{background-color:#FFE08A}
+  .say:disabled{opacity:.4;cursor:default}
 
-.item{ background:#fff; border:1px solid var(--border); border-left:5px solid var(--blue);
-  border-radius:14px; padding:12px 14px; margin-bottom:10px; }
-.item.apk{ border-left-color:var(--green); }
-.item .row1{ display:flex; align-items:baseline; gap:8px; }
-.item .name{ font-weight:800; color:var(--blue-dark); font-size:14.5px;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1 1 auto; min-width:0; }
-.item .size{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
-.item .meta{ font-size:11.5px; color:var(--muted); margin-top:2px; }
-.acts{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-.btn{ padding:9px 14px; border-radius:40px; border:1.5px solid var(--blue); background:#fff;
-  color:var(--blue-dark); font-weight:800; font-size:12px; font-family:inherit; cursor:pointer; }
-.btn.go{ background:linear-gradient(135deg,var(--blue-dark),var(--blue)); color:#fff; border-color:transparent; }
-.btn.get{ background:linear-gradient(135deg,#1d7a35,var(--green)); color:#fff; border-color:transparent; }
-.btn.small{ padding:7px 12px; font-size:11.5px; }
+  .sheet{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+  canvas{
+    display:block;background:#fff;touch-action:none;cursor:crosshair;
+    border:2px dashed var(--rule);border-radius:10px;
+  }
+  .cheer{
+    position:absolute;left:50%;top:10px;transform:translateX(-50%);
+    background:#FFE9A8;border:3px solid var(--ink);border-radius:20px;
+    padding:5px 16px;font-size:clamp(14px,3.6vw,20px);
+    opacity:0;transition:opacity .25s ease;pointer-events:none;
+  }
+  .cheer.show{opacity:1}
 
-.empty{ text-align:center; color:var(--muted); font-size:12.5px; padding:14px 10px 20px; }
-.warn{ background:#fff8e1; border:1.5px solid var(--gold); border-radius:12px;
-  padding:11px 13px; font-size:12.5px; margin-top:10px; }
-.warn b{ color:#7a5600; }
-.bad{ background:#fdecea; border:1.5px solid #f5c2bd; border-radius:12px;
-  padding:12px 14px; font-size:12.5px; color:#7a1c22; margin-bottom:14px; }
-.bad b{ display:block; margin-bottom:4px; }
+  .bar{flex:0 0 auto;display:flex;align-items:center;gap:8px}
+  .meter{
+    flex:1;height:14px;background:#fff;border:2px solid var(--ink);border-radius:9px;overflow:hidden;
+  }
+  .meter i{display:block;height:100%;width:0;background:#1FA13A;transition:width .15s linear}
+  .bar span{font-size:clamp(11px,3vw,14px);min-width:44px;text-align:right}
 
-.viewer{ position:fixed; inset:0; background:var(--bg); display:none; flex-direction:column; z-index:900; }
-.viewer.show{ display:flex; }
-.vbar{ flex:none; display:flex; align-items:center; gap:10px; background:var(--blue-dark); color:#fff; padding:10px 12px; }
-.vbar .nm{ flex:1 1 auto; font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.vbar button{ background:rgba(255,255,255,.15); color:#fff; border:none; border-radius:20px;
-  padding:8px 14px; font-weight:800; font-size:12px; font-family:inherit; cursor:pointer; }
-.viewer iframe{ flex:1 1 auto; width:100%; border:none; background:#fff; }
+  .pager{flex:0 0 auto;display:flex;gap:8px}
+  .pager button{
+    flex:1;font-family:var(--font-hand);font-size:clamp(14px,3.6vw,18px);padding:9px;
+    border:3px solid var(--ink);border-radius:11px;background:#fff;cursor:pointer;
+  }
+  .pager button:disabled{opacity:.4;cursor:default}
 
-.foot{ text-align:center; font-size:11px; color:var(--muted); padding:14px 0 0; }
+  .tray{
+    flex:0 0 auto;background:linear-gradient(var(--tray2),var(--tray));
+    border-top:4px solid #241505;padding:6px 8px max(8px,env(safe-area-inset-bottom));
+  }
+  .traytop{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:4px}
+  .traytop p{margin:0;color:#FFE9C4;font-size:clamp(10px,2.8vw,13px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .traytop p .swatch{
+    display:inline-block;width:14px;height:14px;border-radius:4px;
+    border:2px solid #FFE9C4;vertical-align:-3px;margin-right:5px;
+  }
+  .tools{flex:0 0 auto;display:flex;gap:6px}
+  .tools button{
+    font-family:var(--font-hand);font-size:clamp(11px,3vw,14px);padding:6px 9px;
+    border:2px solid #241505;border-radius:9px;background:#FFE9C4;cursor:pointer;
+  }
+  .crayons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:11px 0 5px}
+  .crayon{
+    flex:0 0 auto;border:0;background:none;cursor:pointer;padding:3px 3px 2px;border-radius:12px;
+    opacity:.62;transform:translateY(9px) scale(.9);
+    transition:transform .14s ease, opacity .14s ease, background .14s ease;
+  }
+  .crayon svg{display:block;width:var(--cw);height:calc(var(--cw) * 2.18)}
+  .crayon[aria-pressed="true"]{
+    opacity:1;transform:translateY(-5px) scale(1.05);
+    background:#FFE9C4;box-shadow:0 3px 0 #241505;
+  }
+  .crayon[aria-pressed="true"]::after{
+    content:"\2713";display:block;text-align:center;line-height:1;
+    font-size:calc(var(--cw) * .34);color:#241505;
+  }
+
+  @media (min-width:700px){ :root{--cw:54px} .card{padding:14px;gap:10px} }
+  @media (min-width:1100px){ :root{--cw:60px} }
+  @media (max-height:720px) and (orientation:portrait){ :root{--cw:34px} header p{display:none} }
+  @media (max-height:560px) and (orientation:landscape){
+    :root{--cw:30px}
+    .shell{flex-direction:row}
+    header p{display:none}
+    header{padding:4px 8px}
+    main{padding:5px}
+    .card{padding:8px;gap:5px}
+    .strip{padding:4px 6px}
+    .strip button{min-width:32px;height:30px;font-size:14px}
+    .pager button{padding:5px;font-size:13px}
+    .tray{width:124px;border-top:0;border-left:4px solid #241505;display:flex;flex-direction:column;padding:6px}
+    .traytop{flex-direction:column;margin:0 0 4px}
+    .traytop p{display:none}
+    .tools{flex-direction:column;width:100%}
+    .tools button{width:100%}
+    .crayons{flex-direction:row;flex-wrap:wrap;align-content:flex-start;justify-content:center;gap:6px;padding:6px 0 0;overflow-y:auto}
+    .crayon{transform:scale(.9)}
+    .crayon[aria-pressed="true"]{transform:translateY(-4px)}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
 </head>
 <body>
+<div class="shell">
+<div class="col">
 
-<div class="app-header">
-  <div class="org">National Malaria Control Programme — MoH, Sierra Leone</div>
-  <div class="title">App &amp; Tools</div>
-  <div class="sub">The Android app and the HTML tools, read from GitHub</div>
-</div>
+<header>
+  <h1>Sillah Kanu Series — Writing Practice</h1>
+  <p>Trace the number with your finger to fill it with colour</p>
+</header>
 
-<div class="wrap">
+<nav class="strip" id="strip" aria-label="Choose a number"></nav>
 
-  <div id="errBox"></div>
-
-  <div class="src" id="srcBox">Reading the repository...</div>
-
-</div>
-
-  <div class="head"><h2>Android app</h2><div class="rule"></div><div class="count" id="apkCount">—</div></div>
-  <div id="apkList"><div class="empty">Reading...</div></div>
-
-  <div class="head" style="margin-top:24px;"><h2>HTML tools</h2><div class="rule"></div><div class="count" id="htmlCount">—</div></div>
-  <div id="htmlList"><div class="empty">Reading...</div></div>
-
-  <div class="foot">Informatics Consultancy Firm, Sierra Leone · <span id="buildTag"></span></div>
-</div>
-
-<div class="viewer" id="viewer">
-  <div class="vbar">
-    <div class="nm" id="vName"></div>
-    <button onclick="closeViewer()">CLOSE</button>
+<main>
+  <div class="card">
+    <div class="head">
+      <p class="phrase" id="phrase"></p>
+      <button class="say" id="say" aria-label="Hear the number" title="Hear the number"></button>
+    </div>
+    <div class="sheet" id="sheet">
+      <canvas id="pad"></canvas>
+      <div class="cheer" id="cheer">Well done!</div>
+    </div>
+    <div class="bar">
+      <div class="meter"><i id="meter"></i></div>
+      <span id="pct">0%</span>
+    </div>
+    <div class="pager">
+      <button id="prev">&#8592; Back</button>
+      <button id="next">Next &#8594;</button>
+    </div>
   </div>
-  <iframe id="vFrame" src="about:blank" allow="geolocation *; fullscreen"></iframe>
+</main>
+
+</div><!-- /col -->
+
+<div class="tray">
+  <div class="traytop">
+    <p id="hint"></p>
+    <div class="tools">
+      <button id="clear">Start again</button>
+    </div>
+  </div>
+  <div class="crayons" id="crayons"></div>
 </div>
+
+</div><!-- /shell -->
 
 <script>
-/* ==========================================================================
-   APP & TOOLS  ·  reads a GitHub folder, nothing is uploaded from here
-   NMCP Sierra Leone · ICF-SL
+/* ================= crayons ================= */
+const COLOURS = {red:"#E8112D", blue:"#1E90FF", green:"#1FA13A", purple:"#7A1FD1",
+                 orange:"#F5821F", pink:"#FF3EA5"};
+const NAMES   = {red:"red", blue:"blue", green:"green", purple:"purple",
+                 orange:"orange", pink:"pink"};
+const ORDER = Object.keys(COLOURS);
+let pick = COLOURS.red;
 
-   HOW IT WORKS
-     It asks GitHub what is in one folder of one repository, then lists the .apk
-     for downloading and the .html files for opening. Change the repository in
-     the settings panel; the choice is remembered on this device.
+/* ================= pages: the numbers in the book ================= */
+const PAGES = [];
+for(let n=1; n<=30; n++) PAGES.push(String(n));
+const WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten",
+  "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen",
+  "twenty","twenty one","twenty two","twenty three","twenty four","twenty five","twenty six",
+  "twenty seven","twenty eight","twenty nine","thirty"];
 
-   TWO THINGS THAT MATTER AND ARE EASY TO GET WRONG
-     1. An HTML file is opened from the PAGES address, not from raw.githubusercontent,
-        because raw serves .html as plain text and the browser would show the
-        source code instead of the form. If Pages is not switched on for the
-        repository, the page says so rather than showing gibberish.
-     2. GitHub allows about 60 unauthenticated requests an hour from one address.
-        The listing is therefore cached on the device, so a supervisor opening the
-        page repeatedly still sees the tools, and the page keeps working offline
-        with the last list it saw.
-   ========================================================================== */
+let current = 0;                 // index into PAGES
+let booted = false;
+const filled = {};               // page -> how much has been traced
+const traced = {};               // page -> saved finger strokes
 
-var BUILD = 'apptools-2026-08-01a';
-document.getElementById('buildTag').textContent = 'build ' + BUILD;
-
-/* ---------------------------------------------------------------------------
-   SET THE REPOSITORY HERE, ONCE. Nothing is configured on the phone.
-   --------------------------------------------------------------------------- */
-var REPO = {
-  owner:  '',                 // e.g. 'icf-sl'
-  repo:   '',                 // e.g. 'nmdr-portal'
-  branch: 'main',
-  path:   '',                 // folder inside the repo, blank for the top level
-  pages:  ''                  // e.g. 'https://icf-sl.github.io/nmdr-portal/'
-};
-
-var CACHE_KEY = 'nmdr_apptools_cache';
-var CFG = (function (){
-  var c = {};
-  Object.keys(REPO).forEach(function (k){ c[k] = REPO[k]; });
-
-  /* If the block above was left blank, work the repository out from the address
-     this page is being served at. On GitHub Pages
-        https://<owner>.github.io/<repo>/...
-     gives the owner and the repository, so a copy dropped into a repo and
-     published just works with nothing filled in. A user site, <owner>.github.io
-     with no repo folder, uses the repository <owner>.github.io. */
-  if ((!c.owner || !c.repo) && /\.github\.io$/i.test(location.hostname)) {
-    c.owner = c.owner || location.hostname.replace(/\.github\.io$/i, '');
-    if (!c.repo) {
-      var first = location.pathname.split('/').filter(Boolean)[0];
-      c.repo = (first && !/\.html?$/i.test(first)) ? first : location.hostname;
-    }
-    c.derived = true;
-  }
-
-  if (!c.branch) c.branch = 'main';
-  c.path = String(c.path || '').replace(/^\/+|\/+$/g, '');
-  /* Where the files are SERVED from. When the page worked itself out, that is
-     simply the folder this page is in, which is right for a project site and for
-     a user site alike. */
-  if (!c.pages && c.derived) {
-    c.pages = location.origin + location.pathname.replace(/[^/]*$/, '');
-  }
-  if (!c.pages && c.owner && c.repo) {
-    c.pages = 'https://' + c.owner.toLowerCase() + '.github.io/' + c.repo + '/';
-  }
-  if (c.pages && c.pages.slice(-1) !== '/') c.pages += '/';
-  return c;
-})();
-
-function esc(v){
-  return String(v === undefined || v === null ? '' : v)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+/* ================= speaking ================= */
+const canSpeak = "speechSynthesis" in window;
+let voice = null;
+function pickVoice(){
+  if(!canSpeak) return null;
+  let vs = [];
+  try { vs = speechSynthesis.getVoices() || []; } catch(e){ return null; }
+  const en = vs.filter(v => /^en/i.test(v.lang || ""));
+  return en.find(v => /GB|UK/i.test(v.lang)) || en[0] || vs[0] || null;
 }
-function size(n){
-  if (!n && n !== 0) return '';
-  if (n < 1024) return n + ' B';
-  if (n < 1024*1024) return Math.round(n/1024) + ' KB';
-  return (Math.round(n/1024/1024*10)/10) + ' MB';
+if(canSpeak){
+  voice = pickVoice();
+  try { speechSynthesis.onvoiceschanged = ()=>{ voice = pickVoice(); }; } catch(e){}
+}
+function say(t){
+  if(!canSpeak) return;
+  try{
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(t);
+    u.rate = .8; u.pitch = 1.15; u.lang = (voice && voice.lang) || "en-GB";
+    if(voice) u.voice = voice;
+    speechSynthesis.speak(u);
+  }catch(e){}
 }
 
-function apiUrl(){
-  return 'https://api.github.com/repos/' + encodeURIComponent(CFG.owner) + '/' +
-         encodeURIComponent(CFG.repo) + '/contents/' + (CFG.path ? CFG.path + '/' : '') +
-         '?ref=' + encodeURIComponent(CFG.branch);
+/* ================= the tracing pad ================= */
+const pad   = document.getElementById("pad");
+const sheet = document.getElementById("sheet");
+const ctx   = pad.getContext("2d");
+const mask  = document.createElement("canvas");     // the number, filled solid
+const mctx  = mask.getContext("2d", {willReadFrequently:true});
+const paint = document.createElement("canvas");     // what the finger has drawn
+const pctx  = paint.getContext("2d");
+const shown = document.createElement("canvas");     // paint kept inside the number
+const sctx  = shown.getContext("2d", {willReadFrequently:true});
+
+let W = 0, H = 0, dpr = 1, glyphPixels = 0;
+const FONT = '"Arial Rounded MT Bold","Trebuchet MS",Verdana,sans-serif';
+
+function layout(){
+  const box = sheet.getBoundingClientRect();
+  if(box.width < 20 || box.height < 20) return;
+  const r = 4/3;
+  let w = box.width, h = w / r;
+  if(h > box.height){ h = box.height; w = h * r; }
+  w = Math.floor(w); h = Math.floor(h);
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  pad.style.width = w + "px"; pad.style.height = h + "px";
+  W = Math.floor(w*dpr); H = Math.floor(h*dpr);
+  [pad, mask, paint, shown].forEach(c=>{ c.width = W; c.height = H; });
+  buildGlyph();
+  restore();
+}
+let layoutTimer = null;
+window.addEventListener("resize", ()=>{ clearTimeout(layoutTimer); layoutTimer = setTimeout(layout, 90); });
+window.addEventListener("orientationchange", ()=>setTimeout(layout, 140));
+
+function restore(){
+  const saved = traced[current];
+  if(!saved){ redraw(); measure(); return; }
+  const img = new Image();
+  img.onload = ()=>{ pctx.clearRect(0,0,W,H); pctx.drawImage(img, 0, 0, W, H); redraw(); measure(); };
+  img.onerror = ()=>{ redraw(); measure(); };
+  img.src = saved;
 }
 
-/* where a file is SERVED from, which is not where it is listed from */
-function openUrl(name){
-  return CFG.pages + (CFG.path ? CFG.path + '/' : '') + name;
+function glyphFont(){
+  // the biggest size of this number that fits the paper with a margin
+  let size = H * 0.8;
+  mctx.font = "bold " + size + "px " + FONT;
+  const w = mctx.measureText(PAGES[current]).width;
+  const maxW = W * 0.78;
+  if(w > maxW) size = size * maxW / w;
+  return "bold " + Math.floor(size) + "px " + FONT;
 }
 
-/* ---------- reading the folder ---------- */
-var triedOther = false;
-
-function load(loud){
-  if (!CFG.owner || !CFG.repo) {
-    /* the file was published without its repository filled in */
-    document.getElementById('errBox').innerHTML = '<div class="bad"><b>This copy has no repository set.</b>' +
-      'It normally works this out from its own address, which only happens on a github.io address. ' +
-      'This page is at ' + esc(location.origin) + ', so fill in owner and repo in the REPO block ' +
-      'at the top of the file.</div>';
-    document.getElementById('srcBox').style.display = 'none';
-    document.getElementById('apkList').innerHTML = '<div class="empty">Nothing to read yet.</div>';
-    document.getElementById('htmlList').innerHTML = '<div class="empty">Nothing to read yet.</div>';
-    return;
-  }
-
-  document.getElementById('srcBox').innerHTML = 'Reading <b>' + esc(CFG.owner + '/' + CFG.repo) + '</b>...';
-  document.getElementById('errBox').innerHTML = '';
-
-  fetch(apiUrl(), { headers: { 'Accept': 'application/vnd.github+json' } })
-    .then(function (res){
-      if (res.status === 403) throw new Error('rate');
-      if (res.status === 404) throw new Error('missing');
-      if (!res.ok) throw new Error('GitHub answered ' + res.status);
-      return res.json();
-    })
-    .then(function (list){
-      if (!Array.isArray(list)) throw new Error('That path is a file, not a folder.');
-      var files = list.filter(function (f){ return f.type === 'file'; })
-        .map(function (f){ return { name: f.name, size: f.size, download: f.download_url }; });
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ at: new Date().toLocaleString(), files: files })); } catch (e) {}
-      draw(files, 'read just now');
-    })
-    .catch(function (err){
-      /* a repository made some years ago is on master rather than main, so try
-         the other name once before reporting that nothing was found */
-      if (String(err.message) === 'missing' && !triedOther) {
-        triedOther = true;
-        CFG.branch = (CFG.branch === 'main') ? 'master' : 'main';
-        load(loud);
-        return;
-      }
-      fallback(err);
-    });
+function buildGlyph(){
+  const f = glyphFont();
+  mctx.clearRect(0,0,W,H);
+  mctx.font = f; mctx.textAlign = "center"; mctx.textBaseline = "middle";
+  mctx.fillStyle = "#000";
+  mctx.fillText(PAGES[current], W/2, H/2);
+  // how many pixels the number covers, sampled — used for the progress bar
+  const d = mctx.getImageData(0,0,W,H).data;
+  let n = 0;
+  for(let i=3; i<d.length; i+=16) if(d[i] > 40) n++;
+  glyphPixels = Math.max(1, n);
 }
 
-/* if GitHub cannot be reached, show the last list rather than an empty page */
-function fallback(err){
-  var cached = null;
-  try { cached = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) {}
-
-  var why = String(err && err.message || err);
-  var msg;
-  if (why === 'rate') {
-    msg = '<b>GitHub is asking you to wait.</b> It allows about 60 reads an hour from one connection, ' +
-          'and that has been used up. The list below is the last one this device saw. It will work again within the hour.';
-  } else if (why === 'missing') {
-    msg = '<b>That repository or folder was not found.</b> Check the user, the repository, the branch and the folder. ' +
-          'A private repository cannot be read this way at all.';
-  } else if (!navigator.onLine) {
-    msg = '<b>This phone is offline.</b> Showing the list it last saw. Downloading and opening need a connection.';
-  } else {
-    msg = '<b>GitHub could not be reached.</b> ' + esc(why);
-  }
-  document.getElementById('errBox').innerHTML = '<div class="bad">' + msg + '</div>';
-
-  if (cached && cached.files) draw(cached.files, 'last read ' + cached.at);
-  else {
-    document.getElementById('srcBox').innerHTML =
-      '<b>' + esc(CFG.owner + '/' + CFG.repo) + '</b>';
-    document.getElementById('apkList').innerHTML = '<div class="empty">Nothing read yet.</div>';
-    document.getElementById('htmlList').innerHTML = '<div class="empty">Nothing read yet.</div>';
-  }
+function redraw(){
+  const f = glyphFont();
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = "#fff"; ctx.fillRect(0,0,W,H);
+  // faint guide lines, like the ruled page in the book
+  ctx.strokeStyle = "#EFE6D2"; ctx.lineWidth = 2*dpr;
+  ctx.beginPath();
+  ctx.moveTo(0, H*0.22); ctx.lineTo(W, H*0.22);
+  ctx.moveTo(0, H*0.78); ctx.lineTo(W, H*0.78);
+  ctx.stroke();
+  // what the child has traced, kept inside the number
+  sctx.clearRect(0,0,W,H);
+  sctx.drawImage(paint, 0, 0);
+  sctx.globalCompositeOperation = "destination-in";
+  sctx.drawImage(mask, 0, 0);
+  sctx.globalCompositeOperation = "source-over";
+  ctx.drawImage(shown, 0, 0);
+  // the empty number on top: broken outline, like the book
+  ctx.save();
+  ctx.font = f; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.setLineDash([14*dpr, 11*dpr]);
+  ctx.lineWidth = 3*dpr; ctx.strokeStyle = "#8A7B60";
+  ctx.strokeText(PAGES[current], W/2, H/2);
+  ctx.restore();
 }
 
-/* ---------- drawing ---------- */
-function draw(files, when){
-  var apks = files.filter(function (f){ return /\.apk$/i.test(f.name); });
-  var htmls = files.filter(function (f){ return /\.html?$/i.test(f.name); })
-                   .sort(function (a, b){ return a.name < b.name ? -1 : 1; });
-
-  document.getElementById('srcBox').innerHTML =
-    '<b>' + esc(CFG.owner + '/' + CFG.repo) + '</b> · branch ' + esc(CFG.branch) +
-    (CFG.path ? ' · folder ' + esc(CFG.path) : '') +
-    '<div style="margin-top:3px;">' + esc(when) + ' · ' + files.length + ' files in the folder' +
-      (CFG.derived ? ' · worked out from this page\'s own address' : '') + '</div>' +
-    '<div class="acts">' +
-      '<button class="btn small go" onclick="load(true)">READ AGAIN</button>' +
-    '</div>';
-
-  document.getElementById('apkCount').textContent = apks.length ? apks.length + ' app' + (apks.length === 1 ? '' : 's') : 'none';
-  document.getElementById('htmlCount').textContent = htmls.length ? htmls.length + ' file' + (htmls.length === 1 ? '' : 's') : 'none';
-
-  document.getElementById('apkList').innerHTML = apks.length ? apks.map(function (f){
-    return '<div class="item apk"><div class="row1">' +
-      '<div class="name">' + esc(f.name) + '</div><div class="size">' + size(f.size) + '</div></div>' +
-      '<div class="acts">' +
-        '<a class="btn get" href="' + esc(f.download) + '" download="' + esc(f.name) + '">DOWNLOAD TO INSTALL</a>' +
-      '</div>' +
-      '<div class="warn"><b>Installing needs one Android setting.</b> After downloading, Android asks permission ' +
-      'to install from this browser. Allow it once, then open the downloaded file. iPhones cannot install an APK.</div>' +
-    '</div>';
-  }).join('') : '<div class="empty">No .apk in that folder yet.</div>';
-
-  var canOpen = !!CFG.pages;
-  document.getElementById('htmlList').innerHTML = htmls.length ? htmls.map(function (f){
-    return '<div class="item"><div class="row1">' +
-      '<div class="name">' + esc(f.name) + '</div><div class="size">' + size(f.size) + '</div></div>' +
-      '<div class="acts">' +
-        (canOpen ? '<button class="btn go" onclick="open_(\'' + esc(f.name) + '\')">OPEN</button>' : '') +
-        '<a class="btn" href="' + esc(f.download) + '" download="' + esc(f.name) + '">DOWNLOAD</a>' +
-      '</div>' +
-      (canOpen ? '' : '<div class="warn"><b>Cannot open it here yet.</b> Give the address the files are served from, ' +
-        'usually a GitHub Pages address, in the REPO block at the top of this file. Without it a browser shows ' +
-        'code instead of the form.</div>') +
-    '</div>';
-  }).join('') : '<div class="empty">No .html in that folder yet.</div>';
+/* ---------- drawing with a finger ---------- */
+let drawing = false, lastX = 0, lastY = 0;
+function pos(e){
+  const r = pad.getBoundingClientRect();
+  return [ (e.clientX - r.left) * (W / r.width), (e.clientY - r.top) * (H / r.height) ];
 }
-
-/* ---------- opening ---------- */
-function open_(name){
-  document.getElementById('vName').textContent = name;
-  document.getElementById('vFrame').src = openUrl(name);
-  document.getElementById('viewer').classList.add('show');
+function strokeTo(x, y){
+  pctx.strokeStyle = pick;
+  pctx.lineWidth = Math.max(18, H*0.09);
+  pctx.lineCap = "round"; pctx.lineJoin = "round";
+  pctx.beginPath(); pctx.moveTo(lastX, lastY); pctx.lineTo(x, y); pctx.stroke();
+  lastX = x; lastY = y;
 }
-function closeViewer(){
-  document.getElementById('viewer').classList.remove('show');
-}
-window.addEventListener('keydown', function (e){
-  if (e.key === 'Escape' && document.getElementById('viewer').classList.contains('show')) closeViewer();
+pad.addEventListener("pointerdown", e=>{
+  drawing = true; pad.setPointerCapture(e.pointerId);
+  [lastX, lastY] = pos(e);
+  strokeTo(lastX + 0.01, lastY);          // a tap leaves a dot
+  redraw(); measure();
 });
+pad.addEventListener("pointermove", e=>{
+  if(!drawing) return;
+  const [x,y] = pos(e);
+  strokeTo(x, y); redraw();
+});
+pad.addEventListener("pointerup", e=>{
+  if(!drawing) return;
+  drawing = false; measure(); save();
+});
+pad.addEventListener("pointercancel", ()=>{ if(drawing){ drawing = false; measure(); save(); } });
 
-load(false);
+/* ---------- how much of the number is filled ---------- */
+function measure(){
+  const d = sctx.getImageData(0,0,W,H).data;
+  let n = 0;
+  for(let i=3; i<d.length; i+=16) if(d[i] > 40) n++;
+  const p = Math.max(0, Math.min(100, Math.round(100 * n / glyphPixels)));
+  filled[current] = p;
+  document.getElementById("meter").style.width = p + "%";
+  document.getElementById("pct").textContent = p + "%";
+  const cheer = document.getElementById("cheer");
+  if(p >= 85){
+    if(!cheer.classList.contains("show")){
+      cheer.classList.add("show");
+      say("Well done! That is " + WORDS[Number(PAGES[current])]);
+    }
+  } else {
+    cheer.classList.remove("show");
+  }
+  markStrip();
+}
+function save(){ try{ traced[current] = paint.toDataURL(); }catch(e){} }
+
+/* ================= the number strip ================= */
+const strip = document.getElementById("strip");
+PAGES.forEach((n,i)=>{
+  const b = document.createElement("button");
+  b.textContent = n; b.dataset.i = i;
+  b.onclick = ()=>show(i);
+  strip.appendChild(b);
+});
+function markStrip(){
+  [...strip.children].forEach((b,i)=>{
+    b.setAttribute("aria-current", i === current);
+    b.classList.toggle("done", (filled[i] || 0) >= 85);
+  });
+}
+
+/* ================= crayons ================= */
+const crayonBox = document.getElementById("crayons");
+function crayonSVG(hex){
+  return `<svg viewBox="0 0 34 74" aria-hidden="true">
+    <path d="M17,2 L27,20 L27,70 L7,70 L7,20 Z" fill="${hex}" stroke="#241505" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M17,2 L27,20 L20,20 L17,2 Z" fill="rgba(0,0,0,.22)"/>
+    <rect x="7" y="34" width="20" height="12" fill="rgba(255,255,255,.35)"/>
+  </svg>`;
+}
+ORDER.forEach(name=>{
+  const b = document.createElement("button");
+  b.className = "crayon"; b.title = name;
+  b.innerHTML = crayonSVG(COLOURS[name]);
+  b.setAttribute("aria-label", name + " crayon");
+  b.onclick = ()=>{ pick = COLOURS[name]; markCrayons(); };
+  crayonBox.appendChild(b);
+});
+function markCrayons(){
+  [...crayonBox.children].forEach(b=> b.setAttribute("aria-pressed", COLOURS[b.title] === pick));
+  const name = ORDER.find(n => COLOURS[n] === pick) || "red";
+  document.getElementById("hint").innerHTML =
+    '<span class="swatch" style="background:' + pick + '"></span>Using <b>' + NAMES[name] + '</b>';
+}
+
+/* ================= showing a page ================= */
+function show(i){
+  current = i;
+  const n = PAGES[i];
+  document.getElementById("phrase").innerHTML =
+    'Trace <b>' + n + '</b> &mdash; ' + WORDS[Number(n)];
+  document.getElementById("cheer").classList.remove("show");
+  pctx.clearRect(0,0,W,H);
+  layout();
+  markStrip();
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").disabled = i === PAGES.length - 1;
+  const tab = strip.children[i];
+  if(tab && tab.scrollIntoView) tab.scrollIntoView({inline:"center", block:"nearest", behavior:"smooth"});
+  if(booted) say(WORDS[Number(n)]);
+}
+
+document.getElementById("clear").onclick = ()=>{
+  pctx.clearRect(0,0,W,H);
+  traced[current] = null;
+  redraw(); measure();
+};
+document.getElementById("say").onclick = ()=>say(WORDS[Number(PAGES[current])]);
+if(!canSpeak) document.getElementById("say").disabled = true;
+document.getElementById("prev").onclick = ()=>{ if(current > 0) show(current-1); };
+document.getElementById("next").onclick = ()=>{ if(current < PAGES.length-1) show(current+1); };
+
+markCrayons();
+show(0);
+booted = true;
 </script>
 </body>
 </html>
